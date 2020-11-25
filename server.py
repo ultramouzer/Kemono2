@@ -6,6 +6,7 @@ load_dotenv(join(dirname(__file__), '.env'))
 
 from routes.help import help_app
 from routes.proxy import proxy_app
+from routes.support import support_app
 
 from flask import Flask, jsonify, render_template, request, redirect, url_for, send_from_directory, make_response, g
 from flask_caching import Cache
@@ -24,6 +25,7 @@ app.jinja_env.filters['regex_match'] = lambda val, rgx: re.search(rgx, val)
 app.jinja_env.filters['regex_find'] = lambda val, rgx: re.findall(rgx, val)
 app.register_blueprint(help_app, url_prefix='/help')
 app.register_blueprint(proxy_app, url_prefix='/proxy')
+app.register_blueprint(support_app, url_prefix='/support')
 try:
     pool = psycopg2.pool.SimpleConnectionPool(1, 20,
         host = getenv('PGHOST') if getenv('PGHOST') else 'localhost',
