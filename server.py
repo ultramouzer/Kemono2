@@ -1,6 +1,7 @@
 import re
-from os import getenv
-from os.path import join, dirname
+from os import getenv, stat, rename, makedirs
+from os.path import join, dirname, isfile, splitext
+from shutil import move
 from dotenv import load_dotenv
 load_dotenv(join(dirname(__file__), '.env'))
 
@@ -8,12 +9,20 @@ from routes.help import help_app
 from routes.proxy import proxy_app
 from routes.support import support_app
 
-from flask import Flask, jsonify, render_template, request, redirect, url_for, send_from_directory, make_response, g
+from PIL import Image
+from io import BytesIO
+from flask import Flask, jsonify, render_template, render_template_string, request, redirect, url_for, send_from_directory, make_response, g, abort, current_app, send_file
 from flask_caching import Cache
+from werkzeug.utils import secure_filename
+from slugify import slugify_filename
+import requests
 from markupsafe import Markup
+from bleach.sanitizer import Cleaner
 import psycopg2
 from psycopg2 import pool
 from psycopg2.extras import RealDictCursor
+from hashlib import sha256
+
 app = Flask(
     __name__,
     template_folder='views'
@@ -54,6 +63,23 @@ def get_cursor():
         g.cursor = g.connection.cursor()
     return g.cursor
 
+def allowed_file(mime, accepted):
+    return any(x in mime for x in accepted)
+
+@app.errorhandler(413)
+def upload_exceeded(error):
+    props = {
+        'redirect': request.args.get('Referer') if request.args.get('Referer') else '/'
+    }
+    limit = int(getenv('REQUESTS_IMAGES')) if getenv('REQUESTS_IMAGES') else 1048576
+    props['message'] = 'Submitted file exceeds the upload limit. {} MB for requests images.'.format(
+        limit / 1024 / 1024
+    )
+    return render_template(
+        'error.html',
+        props = props
+    ), 413
+
 @app.teardown_appcontext
 def close(e):
     cursor = g.pop('cursor', None)
@@ -61,6 +87,7 @@ def close(e):
         cursor.close()
         connection = g.pop('connection', None)
         if connection is not None:
+            connection.commit()
             pool.putconn(connection)
 
 @app.route('/')
@@ -209,18 +236,6 @@ def random_post():
     response = redirect(url_for('post', service = random[0]['service'], id = random[0]['user'], post = random[0]['id']))
     response.autocorrect_location_header = False
     return response
-
-@app.route('/files/<path>')
-def files(path):
-    return send_from_directory(join(getenv('DB_ROOT'), 'files'), path)
-
-@app.route('/attachments/<path>')
-def attachments(path):
-    return send_from_directory(join(getenv('DB_ROOT'), 'attachments'), path)
-
-@app.route('/inline/<path>')
-def inline(path):
-    return send_from_directory(join(getenv('DB_ROOT'), 'inline'), path)
 
 # TODO: /:service/user/:id/rss
 
@@ -389,7 +404,6 @@ def requests():
         offset = request.args.get('o') if request.args.get('o') else 0
         params += (offset,)
         query += "LIMIT 25"
-        print(query)
 
     cursor = get_cursor()
     cursor.execute(query, params)
@@ -401,8 +415,149 @@ def requests():
         results = results,
         base = base
     ), 200)
+    return response
+
+@app.route('/requests/<id>/vote_up', methods=['POST'])
+def vote_up(id):
+    ip = request.headers.getlist("X-Forwarded-For")[0].rpartition(' ')[-1] if 'X-Forwarded-For' in request.headers else request.remote_addr
+    query = "SELECT * FROM requests WHERE id = %s"
+    params = (id,)
+
+    cursor = get_cursor()
+    cursor.execute(query, params)
+    result = cursor.fetchone()
+
+    props = {
+        'currentPage': 'requests',
+        'redirect': request.args.get('Referer') if request.args.get('Referer') else '/requests'
+    }
+
+    if not len(result):
+        abort(404)
+    hash = sha256(ip.encode()).hexdigest()
+    if hash in result.get('ips'):
+        props['message'] = 'You already voted on this request.'
+        return make_response(render_template(
+            'error.html',
+            props = props
+        ), 401)
+    else:
+        record = result.get('ips')
+        record.append(hash)
+        query = "UPDATE requests SET votes = votes + 1,"
+        query += "ips = %s "
+        params = (record,)
+        query += "WHERE id = %s"
+        params += (id,)
+        cursor.execute(query, params)
+
+        return make_response(render_template(
+            'success.html',
+            props = props
+        ), 200)
+
+@app.route('/requests/new')
+def request_form():
+    props = {
+        'currentPage': 'requests'
+    }
+
+    response = make_response(render_template(
+        'requests_new.html',
+        props = props
+    ), 200)
     response.headers['Cache-Control'] = 'max-age=60, public, stale-while-revalidate=2592000'
     return response
+
+@app.route('/requests/new', methods=['POST'])
+def request_submit():
+    props = {
+        'currentPage': 'requests',
+        'redirect': request.args.get('Referer') if request.args.get('Referer') else '/requests'
+    }
+
+    ip = request.headers.getlist("X-Forwarded-For")[0].rpartition(' ')[-1] if 'X-Forwarded-For' in request.headers else request.remote_addr
+
+    if not request.form.get('user_id'):
+        props['message'] = 'You didn\'t enter a user ID.'
+        return make_response(render_template(
+            'error.html',
+            props = props
+        ), 400)
+
+    if getenv('TELEGRAMTOKEN'):
+        snippet = ''
+        with open('views/requests_new.html', 'r') as file:
+            snippet = file.read()
+
+        requests.post(
+            'https://api.telegram.org/bot' + getenv('TELEGRAMTOKEN') + '/sendMessage',
+            params = {
+                'chat_id': '-' + getenv('TELEGRAMCHANNEL'),
+                'parse_mode': 'HTML',
+                'text': render_template_string(snippet)
+            }
+        )
+
+    filename = ''
+    try:
+        if 'image' in request.files:
+            image = request.files['image']
+            if image and image.filename and allowed_file(image.content_type, ['png', 'jpeg', 'gif']):
+                filename = original = slugify_filename(secure_filename(image.filename))
+                tmp = join('/tmp', filename)
+                image.save(tmp)
+                limit = int(getenv('REQUESTS_IMAGES')) if getenv('REQUESTS_IMAGES') else 1048576
+                if stat(tmp).st_size > limit:
+                    abort(413)
+                makedirs(join(getenv('DB_ROOT'), 'requests', 'images'), exist_ok=True)
+                store = join(getenv('DB_ROOT'), 'requests', 'images', filename)
+                copy = 1
+                while isfile(store):
+                    filename = splitext(original)[0] + '-' + str(copy) + splitext(original)[1]
+                    store = join(getenv('DB_ROOT'), 'requests', 'images', filename)
+                    copy += 1
+                move(tmp, store)
+    except Exception as error:
+        props['message'] = 'Failed to upload image. Error: {}'.format(error)
+        return make_response(render_template(
+            'error.html',
+            props = props
+        ), 500)
+
+    scrub = Cleaner(tags = [])
+    text = Cleaner(tags = ['br'])
+
+    columns = ['service','"user"','title','description','price','ips']
+    description = request.form.get('description').strip().replace('\n', '<br>\n')
+    params = (
+        scrub.clean(request.form.get('service')),
+        scrub.clean(request.form.get('user_id').strip()),
+        scrub.clean(request.form.get('title').strip()),
+        text.clean(description),
+        scrub.clean(request.form.get('price').strip()),
+        [sha256(ip.encode()).hexdigest()]
+    )
+    if request.form.get('specific_id'):
+        columns.append('post_id')
+        params += (scrub.clean(request.form.get('specific_id').strip()),)
+    if filename:
+        columns.append('image')
+        params += (join('/requests', 'images', filename),)
+    data = ['%s'] * len(params)
+
+    query = "INSERT INTO requests ({fields}) VALUES ({values})".format(
+        fields = ','.join(columns),
+        values = ','.join(data)
+    )
+
+    cursor = get_cursor()
+    cursor.execute(query, params)
+
+    return make_response(render_template(
+        'success.html',
+        props = props
+    ), 200)
 
 ### API ###
 

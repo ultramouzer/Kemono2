@@ -1,0 +1,9 @@
+{% extends 'components/shell.html' %}
+{% block content %}
+  <h1 class="subtitle">Error</h1>
+  <p class="subtitle">{{ props.get('message') }}</p>
+  {% if props.get('redirect') %}
+    <meta http-equiv="Refresh" content="5; url='{{ props.get('redirect') }}">
+    <p class="subtitle">Redirecting you back...</p>
+  {% endif %}
+{% endblock %}
