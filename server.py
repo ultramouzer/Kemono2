@@ -151,8 +151,8 @@ def thumbnail(path):
         response = redirect(join('/', 'thumbnail', path), code=302)
         response.autocorrect_location_header = False
         return response
-    except:
-        return f"The file you requested could not be converted.", 404
+    except Exception as e:
+        return f"The file you requested could not be converted. Error: {e}", 404
 
 @app.route('/artists/random')
 def random_artist():
