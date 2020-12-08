@@ -140,6 +140,19 @@ def root():
     response.autocorrect_location_header = False
     return response
 
+@app.route('/thumbnail/<path:path>')
+def thumbnail(path):
+    try:
+        image = Image.open(join(getenv('DB_ROOT'), path))
+        image = image.convert('RGB')
+        image.thumbnail((800, 800))
+        makedirs(dirname(join(getenv('DB_ROOT'), 'thumbnail', path)), exist_ok=True)
+        image.save(join(getenv('DB_ROOT'), 'thumbnail', path), 'JPEG', quality=60)
+        response = redirect(join('/', 'thumbnail', path), code=302)
+        return response
+    except:
+        return f"The file you requested could not be converted.", 404
+
 @app.route('/artists/random')
 def random_artist():
     cursor = get_cursor()
@@ -363,7 +376,7 @@ def board():
     return response
 
 @app.route('/requests')
-def requests():
+def requests_list():
     props = {
         'currentPage': 'requests'
     }
@@ -558,6 +571,65 @@ def request_submit():
         'success.html',
         props = props
     ), 200)
+
+@app.route('/importer')
+def importer():
+    props = {
+        'currentPage': 'import'
+    }
+
+    response = make_response(render_template(
+        'importer_list.html',
+        props = props
+    ), 200)
+    response.headers['Cache-Control'] = 'max-age=60, public, stale-while-revalidate=2592000'
+    return response
+
+@app.route('/importer/tutorial')
+def importer_tutorial():
+    props = {
+        'currentPage': 'import'
+    }
+
+    response = make_response(render_template(
+        'importer_tutorial.html',
+        props = props
+    ), 200)
+    response.headers['Cache-Control'] = 'max-age=60, public, stale-while-revalidate=2592000'
+    return response
+
+@app.route('/importer/ok')
+def importer_ok():
+    props = {
+        'currentPage': 'import'
+    }
+
+    response = make_response(render_template(
+        'importer_ok.html',
+        props = props
+    ), 200)
+    response.headers['Cache-Control'] = 'max-age=60, public, stale-while-revalidate=2592000'
+    return response
+
+@app.route('/importer/status/<id>')
+def importer_status(id):
+    cursor = get_cursor()
+    query = "SELECT FROM logs WHERE to_tsvector(\'english\', log0) @@ websearch_to_tsquery(%s)"
+    params = ('kemono:importer:status:' + id,)
+    cursor.execute(query, params)
+    results = cursor.fetchall()
+
+    props = {
+        'currentPage': 'import'
+    }
+
+    response = make_response(render_template(
+        'importer_status.html',
+        props = props,
+        results = results
+    ), 200)
+    response.headers['Cache-Control'] = 'max-age=60, public, stale-while-revalidate=2592000'
+    return response
 
 ### API ###
 
