@@ -656,7 +656,6 @@ def importer_submit():
             }
         )
         r.raise_for_status()
-        buffer = BytesIO(r.content)
         # in new importer, return just the id instead of a whole page
         props = {
             'currentPage': 'import',
