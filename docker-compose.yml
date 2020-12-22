@@ -28,44 +28,12 @@ services:
       - PGPASSWORD=shinonome
       - PGDATABASE=kemonodb
       - PGHOST=kemono-db
-      - ARCHIVERHOST=kemono-archiver
-      - ARCHIVERPORT=8000
     volumes:
       - data:/storage
     sysctls:
       net.core.somaxconn: 40000
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:80"]
-      interval: 1m
-      timeout: 2m
-      retries: 3
-      start_period: 30s
-  kemono-cache:
-    image: healthcheck/redis
-    container_name: kemono-cache
-    command: ["redis-server", "--appendonly", "no"]
-    volumes:
-      - cache-data:/data
-    restart: unless-stopped
-  kemono-archiver:
-    image: openyiff/kemonoparty
-    container_name: kemono-archiver
-    restart: unless-stopped
-    depends_on:
-      kemono-db:
-        condition: service_healthy
-      kemono-cache:
-        condition: service_healthy
-    environment:
-      - PGUSER=nano
-      - PGPASSWORD=shinonome
-      - PGDATABASE=kemonodb
-      - PGHOST=kemono-db
-      - RDHOST=kemono-cache
-    volumes:
-      - data:/storage
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000"]
       interval: 1m
       timeout: 2m
       retries: 3
@@ -87,12 +55,6 @@ volumes:
     #   o: 'bind'
     #   device: "/mnt/slab1/kemono-db"
   data:
-    driver: local
-    # driver_opts:
-    #   type: 'none'
-    #   o: 'bind'
-    #   device: "/mnt/slab1/kemono"
-  cache-data:
     driver: local
     # driver_opts:
     #   type: 'none'

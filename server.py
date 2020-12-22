@@ -628,8 +628,7 @@ def importer_status(id):
     results = cursor.fetchall()
 
     props = {
-        'currentPage': 'import',
-        'id': id
+        'currentPage': 'import'
     }
 
     response = make_response(render_template(
@@ -641,31 +640,6 @@ def importer_status(id):
     return response
 
 ### API ###
-@app.route('/api/import', methods=['POST'])
-def importer_submit():
-    host = getenv('ARCHIVERHOST')
-    port = getenv('ARCHIVERPORT') if getenv('ARCHIVERPORT') else '8000'
-    
-    try:
-        r = requests.post(
-            f'http://{host}:{port}/api/import',
-            json = {
-                'service': request.form.get("service"),
-                'session_key': request.form.get("session_key"),
-                'channel_ids': request.form.get("channel_ids")
-            }
-        )
-        r.raise_for_status()
-        # in new importer, return just the id instead of a whole page
-        props = {
-            'currentPage': 'import',
-        }
-        return make_response(render_template(
-            'success.html',
-            props = props
-        ), 200)
-    except Exception as e:
-        return f'Error while connecting to archiver. Is it running? Error: {e}', 500
 
 # TODO: file sharing api (/api/upload)
 
