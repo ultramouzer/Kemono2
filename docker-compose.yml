@@ -28,7 +28,7 @@ services:
       - PGPASSWORD=shinonome
       - PGDATABASE=kemonodb
       - PGHOST=kemono-db
-      - ARCHIVERHOST=kemono-archiver
+      - ARCHIVERHOST=kemono-vpn
       - ARCHIVERPORT=80
     volumes:
       - data:/storage
@@ -73,8 +73,6 @@ services:
       - ovpn-data:/app/ovpn/config
     environment:
       - LOCAL_NETWORK=192.168.1.0/24
-    networks:
-      - default
   autoheal:
     restart: always
     container_name: kemono-autoheal
