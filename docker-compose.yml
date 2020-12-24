@@ -44,10 +44,7 @@ services:
     image: openyiff/kitsune
     container_name: kemono-archiver
     restart: unless-stopped
-    network_mode: service:kemono-vpn
     depends_on:
-      kemono-vpn:
-        condition: service_started
       kemono-db:
         condition: service_healthy
     volumes:
@@ -55,26 +52,6 @@ services:
       - data:/storage
     sysctls:
       net.core.somaxconn: 40000
-  kemono-vpn:
-    image: jeroenslot/nordvpn-proxy:latest
-    container_name: kemono-vpn
-    restart: unless-stopped
-    env_file:
-      - .env.vpn
-    cap_add:
-      - NET_ADMIN
-    devices:
-      - /dev/net/tun
-    dns:
-      - 103.86.96.100
-      - 103.86.99.100
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - ovpn-data:/app/ovpn/config
-    environment:
-      - LOCAL_NETWORK=192.168.1.0/24
-    networks:
-      - default
   autoheal:
     restart: always
     container_name: kemono-autoheal
@@ -84,7 +61,6 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
 volumes:
-  ovpn-data:
   # If you need to store your volumes manually, uncomment the "driver_opts" lines and specify your "device" location.
   db-data:
     driver: local
