@@ -31,6 +31,7 @@ services:
       - ARCHIVERHOST=kemono-vpn
       - ARCHIVERPORT=80
     volumes:
+      - ./flask.cfg:/app/flask.cfg
       - data:/storage
     sysctls:
       net.core.somaxconn: 40000
