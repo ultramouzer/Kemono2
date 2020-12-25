@@ -75,6 +75,19 @@ services:
       - LOCAL_NETWORK=192.168.1.0/24
       - LOAD=0
       - RANDOM_TOP=100
+  ouroboros:
+    container_name: ouroboros
+    hostname: ouroboros
+    image: pyouroboros/ouroboros
+    env_file:
+      - /root/Kemono/.env.ouroboros
+    environment:
+      - CLEANUP=true
+      - INTERVAL=30
+      - MONITOR=kemono
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
   autoheal:
     restart: always
     container_name: kemono-autoheal
