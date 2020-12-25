@@ -79,12 +79,10 @@ services:
     container_name: ouroboros
     hostname: ouroboros
     image: pyouroboros/ouroboros
-    env_file:
-      - /root/Kemono/.env.ouroboros
     environment:
       - CLEANUP=true
       - INTERVAL=30
-      - MONITOR=kemono
+      - MONITOR=kemono kemono-archiver
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
