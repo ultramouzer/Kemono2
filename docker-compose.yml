@@ -76,14 +76,13 @@ services:
       - LOCAL_NETWORK=192.168.1.0/24
       - LOAD=0
       - RANDOM_TOP=100
-  ouroboros:
-    container_name: ouroboros
-    hostname: ouroboros
-    image: pyouroboros/ouroboros
+  kemono-update:
+    image: containrrr/watchtower
+    container_name: kemono-update
+    command: kemono kemono-archiver
     environment:
-      - CLEANUP=true
-      - INTERVAL=30
-      - MONITOR=kemono kemono-archiver
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_POLL_INTERVAL=30
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
