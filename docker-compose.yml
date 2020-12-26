@@ -80,6 +80,7 @@ services:
     image: containrrr/watchtower
     container_name: kemono-update
     command: kemono kemono-archiver
+    network_mode: service:kemono-vpn
     environment:
       - WATCHTOWER_CLEANUP=true
       - WATCHTOWER_POLL_INTERVAL=30
