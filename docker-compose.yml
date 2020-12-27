@@ -74,7 +74,7 @@ services:
       - ovpn-data:/app/ovpn/config
     environment:
       - LOCAL_NETWORK=192.168.1.0/24
-      - LOAD=100
+      - LOAD=0
       - RANDOM_TOP=100
   kemono-update:
     image: containrrr/watchtower
