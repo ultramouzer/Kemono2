@@ -45,7 +45,6 @@ services:
     image: openyiff/kitsune
     container_name: kemono-archiver
     restart: unless-stopped
-    network_mode: service:kemono-vpn
     depends_on:
       kemono-vpn:
         condition: service_started
