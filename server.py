@@ -619,24 +619,30 @@ def importer_ok():
     response.headers['Cache-Control'] = 'max-age=60, public, stale-while-revalidate=2592000'
     return response
 
-@app.route('/importer/status/<id>')
-def importer_status(id):
-    cursor = get_cursor()
-    query = "SELECT FROM logs WHERE to_tsvector(\'english\', log0) @@ websearch_to_tsquery(%s)"
-    params = ('kemono:importer:status:' + id,)
-    cursor.execute(query, params)
-    results = cursor.fetchall()
-
+@app.route('/importer/status/<lgid>')
+def importer_status(lgid):
     props = {
-        'currentPage': 'import'
+        'currentPage': 'import',
+        'id': lgid
     }
 
-    response = make_response(render_template(
-        'importer_status.html',
-        props = props,
-        results = results
-    ), 200)
-    response.headers['Cache-Control'] = 'max-age=60, public, stale-while-revalidate=2592000'
+    try:
+        f = open(join(getenv('DB_ROOT'), 'logs', lgid + '.log'))
+        response = make_response(render_template(
+            'importer_status.html',
+            props = props,
+            log = f.read()
+        ), 200)
+    except IOError:
+        props['message'] = 'That log doesn\'t exist.'
+        response = make_response(render_template(
+            'error.html',
+            props = props
+        ), 401)
+    finally:
+        f.close()
+
+    response.headers['Cache-Control'] = 'max-age=0, private, must-revalidate'
     return response
 
 ### API ###
@@ -663,6 +669,7 @@ def importer_submit():
         # in new importer, return just the id instead of a whole page
         props = {
             'currentPage': 'import',
+            'redirect': f'/importer/status/{r.text}'
         }
         return make_response(render_template(
             'success.html',
