@@ -58,6 +58,7 @@ services:
       net.core.somaxconn: 40000
   kemono-vpn:
     image: bubuntux/nordvpn
+    network_mode: bridge
     container_name: kemono-vpn
     restart: unless-stopped
     env_file:
