@@ -6,7 +6,6 @@ from dotenv import load_dotenv
 load_dotenv(join(dirname(__file__), '.env'))
 
 from routes.help import help_app
-from routes.proxy import proxy_app
 from routes.support import support_app
 
 from PIL import Image
@@ -32,7 +31,6 @@ app.url_map.strict_slashes = False
 app.jinja_env.filters['regex_match'] = lambda val, rgx: re.search(rgx, val)
 app.jinja_env.filters['regex_find'] = lambda val, rgx: re.findall(rgx, val)
 app.register_blueprint(help_app, url_prefix='/help')
-app.register_blueprint(proxy_app, url_prefix='/proxy')
 app.register_blueprint(support_app, url_prefix='/support')
 try:
     pool = psycopg2.pool.SimpleConnectionPool(1, 20,
