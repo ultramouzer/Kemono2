@@ -56,8 +56,7 @@ services:
     sysctls:
       net.core.somaxconn: 40000
   kemono-vpn:
-    image: jeroenslot/nordvpn-proxy:latest
-    container_name: kemono-vpn
+    image: jamestop/nordvpn-openvpn-proxy:latest
     restart: unless-stopped
     env_file:
       - .env.vpn
@@ -66,15 +65,10 @@ services:
     devices:
       - /dev/net/tun
     dns:
-      - 103.86.96.100
-      - 103.86.99.100
+      - 209.222.18.218
+      - 209.222.18.222
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ovpn-data:/app/ovpn/config
-    environment:
-      - LOCAL_NETWORK=192.168.1.0/24
-      - LOAD=100
-      - RANDOM_TOP=100
   kemono-update:
     image: containrrr/watchtower
     container_name: kemono-update
