@@ -41,6 +41,35 @@ services:
       timeout: 2m
       retries: 3
       start_period: 30s
+  kemono-beta:
+    image: openyiff/betamono
+    container_name: kemono-beta
+    restart: unless-stopped
+    depends_on:
+      kemono-db:
+        condition: service_healthy
+    ports:
+      - 9000:80
+    env_file:
+      - .env
+    environment:
+      - PGUSER=nano
+      - PGPASSWORD=shinonome
+      - PGDATABASE=kemonodb
+      - PGHOST=kemono-db
+      - ARCHIVERHOST=kemono-archiver
+      - ARCHIVERPORT=80
+    volumes:
+      - ./flask.cfg:/app/flask.cfg
+      - data:/storage
+    sysctls:
+      net.core.somaxconn: 40000
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80"]
+      interval: 1m
+      timeout: 2m
+      retries: 3
+      start_period: 30s
   kemono-archiver:
     image: openyiff/kitsune
     container_name: kemono-archiver
