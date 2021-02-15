@@ -108,7 +108,7 @@ services:
   kemono-update:
     image: containrrr/watchtower
     container_name: kemono-update
-    command: kemono kemono-archiver
+    command: kemono kemono-archiver kemono-beta
     environment:
       - WATCHTOWER_CLEANUP=true
       - WATCHTOWER_POLL_INTERVAL=30
