@@ -2,6 +2,7 @@ version: '2.3'
 services:
   kemono-db:
     image: healthcheck/postgres
+    shm_size: 1g
     container_name: kemono-db
     environment:
       - POSTGRES_USER=nano
