@@ -52,6 +52,14 @@ html, button, input, select, textarea, .pure-g [class *= "pure-u"] {
   font-family: Helvetica, sans-serif;
 }
 
+.ad-container {
+  text-align: center;
+}
+
+.ad-container * {
+  max-width: 100%;
+}
+
 .subtitle {
   color: #737373;
 }
