@@ -2,6 +2,8 @@ import re
 import random
 import string
 import json
+import pytz
+from feedgen.feed import FeedGenerator
 from urllib.parse import urlencode
 from datetime import datetime, timedelta
 from os import getenv, stat, rename, makedirs
@@ -668,6 +670,45 @@ def user(service, id):
     response.headers['Cache-Control'] = 's-maxage=60'
     return response
 
+@app.route('/<service>/user/<id>/rss')
+def user_rss(service, id):
+    cursor = get_cursor()
+    query = "SELECT * FROM posts WHERE \"user\" = %s AND service = %s "
+    params = (id, service)
+
+    query += "ORDER BY added desc "
+    query += "LIMIT 10"
+
+    cursor.execute(query, params)
+    results = cursor.fetchall()
+
+    cursor3 = get_cursor()
+    query3 = "SELECT * FROM lookup WHERE id = %s AND service = %s"
+    params3 = (id, service)
+    cursor3.execute(query3, params3)
+    results3 = cursor.fetchall()
+    name = results3[0]['name'] if len(results3) > 0 else ''
+
+    fg = FeedGenerator()
+    fg.title(name)
+    fg.description('Feed for posts from ' + name + '.')
+    fg.id(f'http://{request.headers.get("host")}/{service}/user/{id}')
+    fg.link(href=f'http://{request.headers.get("host")}/{service}/user/{id}')
+    fg.generator(generator='Kemono')
+    fg.ttl(ttl=40)
+
+    for post in results:
+        fe = fg.add_entry()
+        fe.title(post['title'])
+        fe.id(f'http://{request.headers.get("host")}/{service}/user/{id}/post/{post["id"]}')       
+        fe.link(href=f'http://{request.headers.get("host")}/{service}/user/{id}/post/{post["id"]}')
+        fe.content(content=post["content"])
+        fe.pubDate(pytz.utc.localize(post["added"]))
+
+    response = make_response(fg.atom_str(pretty=True), 200)
+    response.headers['Content-Type'] = 'application/rss+xml'
+    return response
+
 @app.route('/discord/server/<id>')
 def discord_server(id):
     response = make_response(render_template(
@@ -1162,19 +1203,22 @@ def upload_file():
         resumable.assemble_chunks()
         resumable.cleanup()
 
+        scrub = Cleaner(tags = [])
+        text = Cleaner(tags = ['br'])
+
         post_model = {
             'id': ''.join(random.choice(string.ascii_letters) for x in range(8)),
-            '"user"': request.form.get('user'),
-            'service': request.form.get('service'),
-            'title': request.form.get('title'),
-            'content': request.form.get('content') or "",
+            '"user"': scrub.clean(request.form.get('user')),
+            'service': scrub.clean(request.form.get('service')),
+            'title': scrub.clean(request.form.get('title')),
+            'content': text.clean(request.form.get('content')) or "",
             'embed': {},
             'shared_file': True,
             'added': datetime.now(),
             'published': datetime.now(),
             'edited': None,
             'file': {
-                "name": request.form.get('resumableFilename'),
+                "name": scrub.clean(request.form.get('resumableFilename')),
                 "path": f"/uploads/{request.form.get('resumableFilename')}"
             },
             'attachments': []
