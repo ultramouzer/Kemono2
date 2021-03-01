@@ -29,7 +29,7 @@ services:
       - PGPASSWORD=shinonome
       - PGDATABASE=kemonodb
       - PGHOST=kemono-db
-      - ARCHIVERHOST=kemono-vpn
+      - ARCHIVERHOST=kemono-archiver
       - ARCHIVERPORT=80
     volumes:
       - ./flask.cfg:/app/flask.cfg
@@ -45,7 +45,6 @@ services:
   kemono-archiver:
     image: openyiff/kitsune
     container_name: kemono-archiver
-    network_mode: service:kemono-vpn
     restart: unless-stopped
     depends_on:
       kemono-vpn:
@@ -58,23 +57,25 @@ services:
     sysctls:
       net.core.somaxconn: 40000
   kemono-vpn:
-    image: bubuntux/nordvpn
+    image: jeroenslot/nordvpn-proxy:latest
     container_name: kemono-vpn
-    cap_add:
-      - NET_ADMIN
-      - SYS_MODULE
-    sysctls:
-      - net.ipv4.conf.all.rp_filter=2
-    devices:
-      - /dev/net/tun
+    restart: unless-stopped
     env_file:
       - .env.vpn
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun
+    dns:
+      - 103.86.96.100
+      - 103.86.99.100
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ovpn-data:/app/ovpn/config
     environment:
-      - TECHNOLOGY=NordLynx
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
+      - LOCAL_NETWORK=192.168.1.0/24
+      - LOAD=100
+      - RANDOM_TOP=100
   kemono-update:
     image: containrrr/watchtower
     container_name: kemono-update
