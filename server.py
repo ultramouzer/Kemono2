@@ -45,6 +45,7 @@ try:
         dbname = getenv('PGDATABASE'),
         user = getenv('PGUSER'),
         password = getenv('PGPASSWORD'),
+        port = getenv('PGPORT'),
         cursor_factory = RealDictCursor
     )
 except Exception as error:
