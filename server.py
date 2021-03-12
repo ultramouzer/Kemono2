@@ -21,6 +21,7 @@ from src.pages.legacy import legacy
 from src.pages.artists import artists
 from src.pages.random import random
 from src.pages.post import post
+from src.pages.support import support
 
 app = Flask(
     __name__,
@@ -31,6 +32,7 @@ app.register_blueprint(legacy)
 app.register_blueprint(artists)
 app.register_blueprint(random)
 app.register_blueprint(post)
+app.register_blueprint(support)
 
 app.config.from_pyfile('flask.cfg')
 app.url_map.strict_slashes = False
