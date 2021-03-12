@@ -58,11 +58,11 @@ def do_init_stuff():
 
 @app.after_request
 def do_finish_stuff(response):
-    if not is_url_path_for_file(request.path):
-        start_time = g.request_start_time
-        end_time = datetime.datetime.now()
-        elapsed = end_time - start_time
-        app.logger.debug('Completed {0} request to {1} in {2}ms with ab test variants: {3}'.format(request.method, request.url, elapsed.microseconds/1000, get_all_variants()))
+    # if not is_url_path_for_file(request.path):
+    #     start_time = g.request_start_time
+    #     end_time = datetime.datetime.now()
+    #     elapsed = end_time - start_time
+    #     app.logger.debug('Completed {0} request to {1} in {2}ms with ab test variants: {3}'.format(request.method, request.url, elapsed.microseconds/1000, get_all_variants()))
     return response
 
 @app.errorhandler(413)
