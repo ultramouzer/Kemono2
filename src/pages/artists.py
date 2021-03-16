@@ -133,7 +133,7 @@ def get(service, id):
     #     result_after_kitsune = result_after_kitsune,
     #     session = session
     # ), 200)
-    response.headers['Cache-Control'] = 's-maxage=60'
+    # response.headers['Cache-Control'] = 's-maxage=60'
     return "Testing something, sorry for the inconvenience.", 200
 
 def get_artist_search_results(q, service, sort_by, order, o, limit):
