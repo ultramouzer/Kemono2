@@ -1,6 +1,6 @@
 {% extends 'components/shell.html' %}
 {% block content %}
-{# <div class="user-header" style="background-image: url('/banners/{{ props.service }}/{{ props.id }}');">
+<div class="user-header" style="background-image: url('/banners/{{ props.service }}/{{ props.id }}');">
   <div class="user-header-avatar" style="background-image: url('/icons/{{ props.service }}/{{ props.id }}');"></div>
   <div class="user-header-info">
     <div id="user-header-info-top" class="user-header-info-top">
@@ -20,8 +20,11 @@
       </a>
     </div>
   </div>
-</div> #}
-{% include 'components/list.html' %}
+</div>
+<div class="no-posts">
+  <h1 class="subtitle">Testing things, thank you for your patience.</h1>
+</div>
+{# {% include 'components/list.html' %} #}
 <script src="{{ url_for('static', filename='js/user.js') }}" user="{{ props.id }}" service="{{ props.service }}"></script>
 <script src="{{ url_for('static', filename='js/post.js') }}"></script>
 <script src="{{ url_for('static', filename='js/expander.js') }}"></script>
