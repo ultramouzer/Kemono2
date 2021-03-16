@@ -122,19 +122,19 @@ def get(service, id):
         result_previews.append(previews)
         result_attachments.append(attachments)
     
-    # response = make_response(render_template(
-    #     'user.html',
-    #     props = props,
-    #     results = posts,
-    #     base = base,
-    #     result_previews = result_previews,
-    #     result_attachments = result_attachments,
-    #     result_flagged = result_flagged,
-    #     result_after_kitsune = result_after_kitsune,
-    #     session = session
-    # ), 200)
-    # response.headers['Cache-Control'] = 's-maxage=60'
-    return "Testing something, sorry for the inconvenience.", 200
+    response = make_response(render_template(
+        'user.html',
+        props = props,
+        results = posts,
+        base = base,
+        result_previews = result_previews,
+        result_attachments = result_attachments,
+        result_flagged = result_flagged,
+        result_after_kitsune = result_after_kitsune,
+        session = session
+    ), 200)
+    response.headers['Cache-Control'] = 's-maxage=60'
+    return response
 
 def get_artist_search_results(q, service, sort_by, order, o, limit):
     if service:
