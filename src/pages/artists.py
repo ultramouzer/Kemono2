@@ -45,97 +45,96 @@ def list():
 
 @artists.route('/<service>/user/<id>')
 def get(service, id):
-    return "Testing something, sorry for the inconvenience.", 200
-#     cursor = get_cursor()
-#     props = {
-#         'currentPage': 'posts',
-#         'id': id,
-#         'service': service,
-#         'session': session
-#     }
-#     base = request.args.to_dict()
-#     base.pop('o', None)
-#     base["service"] = service
-#     base["id"] = id
+    cursor = get_cursor()
+    props = {
+        'currentPage': 'posts',
+        'id': id,
+        'service': service,
+        'session': session
+    }
+    base = request.args.to_dict()
+    base.pop('o', None)
+    base["service"] = service
+    base["id"] = id
 
-#     offset = int(request.args.get('o') or 0)
-#     query = request.args.get('q')
-#     limit = limit_int(int(request.args.get('limit') or 25), 50)
+    offset = int(request.args.get('o') or 0)
+    query = request.args.get('q')
+    limit = limit_int(int(request.args.get('limit') or 25), 50)
 
-#     (posts, total_count) = ([], 0)
-#     if query is None:
-#         (posts, total_count) = get_artist_post_page(id, service, offset, limit)
-#     else:
-#         (posts, total_count) = do_artist_post_search(id, service, query, offset, limit)
+    (posts, total_count) = ([], 0)
+    if query is None:
+        (posts, total_count) = get_artist_post_page(id, service, offset, limit)
+    else:
+        (posts, total_count) = do_artist_post_search(id, service, query, offset, limit)
 
-#     artist = get_artist(id, service)
-#     if artist is None:
-#         response = redirect(url_for('artists.list'))
-#         response.autocorrect_location_header = False
-#         return response
+    artist = get_artist(id, service)
+    if artist is None:
+        response = redirect(url_for('artists.list'))
+        response.autocorrect_location_header = False
+        return response
 
-#     props['name'] = artist['name']
-#     props['count'] = total_count
-#     props['limit'] = limit
+    props['name'] = artist['name']
+    props['count'] = total_count
+    props['limit'] = limit
 
-#     result_previews = []
-#     result_attachments = []
-#     result_flagged = []
-#     result_after_kitsune = []
-#     for post in posts:
-#         if post['added'] > datetime.datetime(2020, 12, 22, 0, 0, 0, 0):
-#             result_after_kitsune.append(True)
-#         else:
-#             result_after_kitsune.append(False)
-#         previews = []
-#         attachments = []
-#         if len(post['file']):
-#             if re.search("\.(gif|jpe?g|jpe|png|webp)$", post['file']['path'], re.IGNORECASE):
-#                 previews.append({
-#                     'type': 'thumbnail',
-#                     'path': post['file']['path'].replace('https://kemono.party','')
-#                 })
-#             else:
-#                 attachments.append({
-#                     'path': post['file']['path'],
-#                     'name': post['file'].get('name')
-#                 })
-#         if len(post['embed']):
-#             previews.append({
-#                 'type': 'embed',
-#                 'url': post['embed']['url'],
-#                 'subject': post['embed']['subject'],
-#                 'description': post['embed']['description']
-#             })
-#         for attachment in post['attachments']:
-#             if re.search("\.(gif|jpe?g|jpe|png|webp)$", attachment['path'], re.IGNORECASE):
-#                 previews.append({
-#                     'type': 'thumbnail',
-#                     'path': attachment['path'].replace('https://kemono.party','')
-#                 })
-#             else:
-#                 attachments.append({
-#                     'path': attachment['path'],
-#                     'name': attachment['name']
-#                 })
+    result_previews = []
+    result_attachments = []
+    result_flagged = []
+    result_after_kitsune = []
+    for post in posts:
+        if post['added'] > datetime.datetime(2020, 12, 22, 0, 0, 0, 0):
+            result_after_kitsune.append(True)
+        else:
+            result_after_kitsune.append(False)
+        previews = []
+        attachments = []
+        if len(post['file']):
+            if re.search("\.(gif|jpe?g|jpe|png|webp)$", post['file']['path'], re.IGNORECASE):
+                previews.append({
+                    'type': 'thumbnail',
+                    'path': post['file']['path'].replace('https://kemono.party','')
+                })
+            else:
+                attachments.append({
+                    'path': post['file']['path'],
+                    'name': post['file'].get('name')
+                })
+        if len(post['embed']):
+            previews.append({
+                'type': 'embed',
+                'url': post['embed']['url'],
+                'subject': post['embed']['subject'],
+                'description': post['embed']['description']
+            })
+        for attachment in post['attachments']:
+            if re.search("\.(gif|jpe?g|jpe|png|webp)$", attachment['path'], re.IGNORECASE):
+                previews.append({
+                    'type': 'thumbnail',
+                    'path': attachment['path'].replace('https://kemono.party','')
+                })
+            else:
+                attachments.append({
+                    'path': attachment['path'],
+                    'name': attachment['name']
+                })
 
-#         result_flagged.append(is_post_flagged(post['id'], post['user'], post['service']))
-#         result_previews.append(previews)
-#         result_attachments.append(attachments)
+        result_flagged.append(is_post_flagged(post['id'], post['user'], post['service']))
+        result_previews.append(previews)
+        result_attachments.append(attachments)
     
-#     response = make_response(render_template(
-#         'user.html',
-#         props = props,
-#         results = posts,
-#         base = base,
-#         result_previews = result_previews,
-#         result_attachments = result_attachments,
-#         result_flagged = result_flagged,
-#         result_after_kitsune = result_after_kitsune,
-#         session = session
-#     ), 200)
-#     response.headers['Cache-Control'] = 's-maxage=60'
-#     return response
+    # response = make_response(render_template(
+    #     'user.html',
+    #     props = props,
+    #     results = posts,
+    #     base = base,
+    #     result_previews = result_previews,
+    #     result_attachments = result_attachments,
+    #     result_flagged = result_flagged,
+    #     result_after_kitsune = result_after_kitsune,
+    #     session = session
+    # ), 200)
+    response.headers['Cache-Control'] = 's-maxage=60'
+    return "Testing something, sorry for the inconvenience.", 200
 
 def get_artist_search_results(q, service, sort_by, order, o, limit):
     if service:
