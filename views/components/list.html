@@ -33,6 +33,17 @@
       <script type="text/javascript" data-cfasync="false" async>(adsbyjuicy = window.adsbyjuicy || []).push({'adzone':871536});</script>
     </div>
   </div>
+  <div class="content" id="content">
+    <div class="content-grid">
+      {% for post in results %}
+        {% if not session.get('blocked') or post.service ~ ':' ~ post.user not in session.get('blocked') %}
+          {% with post=post %}
+            {% include 'components/preview.html' %}
+          {% endwith %}
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
   {#
     {% if request.cookies.get('layout') == 'card' or not request.cookies.get('layout') %}
       <div class="content" id="content">
