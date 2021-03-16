@@ -21,10 +21,7 @@
     </div>
   </div>
 </div>
-<div class="no-posts">
-  <h1 class="subtitle">Testing things, thank you for your patience.</h1>
-</div>
-{# {% include 'components/list.html' %} #}
+{% include 'components/list.html' %}
 <script src="{{ url_for('static', filename='js/user.js') }}" user="{{ props.id }}" service="{{ props.service }}"></script>
 <script src="{{ url_for('static', filename='js/post.js') }}"></script>
 <script src="{{ url_for('static', filename='js/expander.js') }}"></script>
