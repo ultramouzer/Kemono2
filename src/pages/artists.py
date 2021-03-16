@@ -43,8 +43,9 @@ def list():
     response.headers['Cache-Control'] = 's-maxage=60'
     return response
 
-# @artists.route('/<service>/user/<id>')
-# def get(service, id):
+@artists.route('/<service>/user/<id>')
+def get(service, id):
+    return "Testing something, sorry for the inconvenience.", 200
 #     cursor = get_cursor()
 #     props = {
 #         'currentPage': 'posts',
