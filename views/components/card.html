@@ -1,3 +1,21 @@
 <div class="pure-u-1 pure-u-sm-1-2 pure-u-md-1-2 pure-u-lg-1-2 pure-u-xl-1-3 card-container">
-  <p>{{ post.title }}</p>
+  {% if is_image %}
+    <div class="card">
+      <style>
+        #toggle-{{ post['id'] }}:checked ~ .card-reveal {
+          display: block;
+          animation-name: fadeInOpacity;
+          animation-iteration-count: 1;
+          animation-timing-function: ease-in;
+          animation-duration: 100ms;
+        }
+      </style>
+      <div class="card-image">
+        <label for="toggle-{{ post['id'] }}">
+          <img src="/thumbnail{{ post['file']['path'] }}" loading="lazy">
+        </label>
+      </div>
+    </div>
+  {% else %}
+  {% endif %}
 </div>
