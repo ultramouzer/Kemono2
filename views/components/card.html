@@ -12,7 +12,7 @@
       </style>
       <div class="card-image">
         <label for="toggle-{{ post.id }}">
-          <img src="/thumbnail{{ post['file'].path|replace('https://kemono.party', '') }}" loading="lazy">
+          <img src="/thumbnail{{ post['file'].path }}" loading="lazy">
         </label>
       </div>
       <input type="checkbox" class="visually-hidden" id="toggle-{{ post.id }}">
@@ -25,11 +25,11 @@
       </div>
       <div class="card-reveal">
         <div class="card-reveal-content">
-          {% include 'components/post_view.html' %}
+          {# {% include 'components/post_view.html' %} #}
         </div>
       </div>
       <div class="card-action">
-        <a target="_blank" href="{{ post['file'].path|replace('https://kemono.party', '') }}">POST IMAGE</a>
+        <a target="_blank" href="{{ post['file'].path }}">POST IMAGE</a>
         <a target="_blank" href="/{{ post['service'] }}/user/{{ post['user'] }}/post/{{ post['id'] }}">VIEW POST</a>
       </div>
     </div>
@@ -37,7 +37,7 @@
     <div class="text-card">
       <div class="card-reveal-content">
         {% set post_link_in_title = true %}
-        {% include 'components/post_view.html' %}
+        {# {% include 'components/post_view.html' %} #}
       </div>
     </div>
   {% endif %}
