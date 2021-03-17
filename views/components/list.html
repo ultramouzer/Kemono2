@@ -44,7 +44,7 @@
             {% set after_kitsune = result_after_kitsune[loop.index0] %}
             {% set is_image = result_is_image[loop.index0] %}
             {% with post=post %}
-              <p>{{ post.title }}</p>
+              {% include 'components/card.html' %}
             {% endwith %}
           {% endif %}
         {% endfor %}
@@ -57,7 +57,7 @@
           {% if not session.get('blocked') or post.service ~ ':' ~ post.user not in session.get('blocked') %}
             {% set is_image = result_after_kitsune[loop.index0] %}
             {% with post=post %}
-              <p>{{ post.title }}</p>
+              {% include 'components/preview.html' %}
             {% endwith %}
           {% endif %}
         {% endfor %}
