@@ -23,6 +23,10 @@
           <label for="toggle-{{ post['id'] }}" class="subtitle" style="cursor:pointer">{{ post['published'] }}</label>
         {% endif %}
       </div>
+      <div class="card-action">
+        <a target="_blank" href="{{ post['file']['path'] }}">POST IMAGE</a>
+        <a target="_blank" href="/{{ post['service'] }}/user/{{ post['user'] }}/post/{{ post['id'] }}">VIEW POST</a>
+      </div>
     </div>
   {% else %}
   {% endif %}
