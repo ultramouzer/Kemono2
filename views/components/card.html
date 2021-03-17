@@ -28,10 +28,6 @@
           {% include 'components/post_view.html' %}
         </div>
       </div>
-      <div class="card-action">
-        <a target="_blank" href="{{ post['file'].path }}">POST IMAGE</a>
-        <a target="_blank" href="/{{ post['service'] }}/user/{{ post['user'] }}/post/{{ post['id'] }}">VIEW POST</a>
-      </div>
     </div>
   {% else %}
     <div class="text-card">
