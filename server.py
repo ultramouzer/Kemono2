@@ -1,5 +1,6 @@
 import re
 import datetime
+from werkzeug.middleware.profiler import ProfilerMiddleware
 from datetime import timedelta
 from os import getenv
 from os.path import join, dirname
@@ -34,6 +35,7 @@ app.register_blueprint(random)
 app.register_blueprint(post)
 app.register_blueprint(support)
 
+app.wsgi_app = ProfilerMiddleware(app.wsgi_app, restrictions=[10], profile_dir='./storage/profile')
 app.config.from_pyfile('flask.cfg')
 app.url_map.strict_slashes = False
 
