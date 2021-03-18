@@ -6,7 +6,6 @@ from os.path import join, dirname
 
 import logging
 from dotenv import load_dotenv
-logging.basicConfig(filename='kemono.log', level=logging.DEBUG)
 load_dotenv(join(dirname(__file__), '.env'))
 from flask import Flask, render_template, request, redirect, g, abort, session
 
@@ -14,7 +13,7 @@ import src.internals.database.database as database
 import src.internals.cache.redis as redis
 from src.internals.cache.flask_cache import cache
 from src.lib.ab_test import get_all_variants
-from src.utils.utils import is_url_path_for_file
+from src.utils.utils import url_is_for_non_logged_file_extension
 
 from src.pages.home import home
 from src.pages.legacy import legacy
@@ -37,6 +36,10 @@ app.register_blueprint(support)
 app.config.from_pyfile('flask.cfg')
 app.url_map.strict_slashes = False
 
+logging.basicConfig(filename='kemono.log', level=logging.DEBUG)
+pil_logger = logging.getLogger('PIL')
+pil_logger.setLevel(logging.INFO)
+
 cache.init_app(app)
 database.init()
 redis.init()
@@ -56,11 +59,11 @@ def do_init_stuff():
 
 @app.after_request
 def do_finish_stuff(response):
-    # if not is_url_path_for_file(request.path):
-    #     start_time = g.request_start_time
-    #     end_time = datetime.datetime.now()
-    #     elapsed = end_time - start_time
-    #     app.logger.debug('Completed {0} request to {1} in {2}ms with ab test variants: {3}'.format(request.method, request.url, elapsed.microseconds/1000, get_all_variants()))
+    if not url_is_for_non_logged_file_extension(request.path):
+        start_time = g.request_start_time
+        end_time = datetime.datetime.now()
+        elapsed = end_time - start_time
+        app.logger.debug('Completed {0} request to {1} in {2}ms with ab test variants: {3}'.format(request.method, request.url, elapsed.microseconds/1000, get_all_variants()))
     return response
 
 @app.errorhandler(413)
