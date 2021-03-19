@@ -14,6 +14,7 @@ dist/
 downloads/
 eggs/
 .eggs/
+lib/
 lib64/
 parts/
 sdist/
@@ -137,4 +138,3 @@ dmypy.json
 cython_debug/
 flask.cfg
 kitsune.py
-.env.vpn

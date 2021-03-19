@@ -2,7 +2,6 @@ version: '2.3'
 services:
   kemono-db:
     image: healthcheck/postgres
-    shm_size: 1g
     container_name: kemono-db
     environment:
       - POSTGRES_USER=nano
@@ -14,7 +13,7 @@ services:
     # ports:
     #  - 5432:5432
   kemono-app:
-    image: openyiff/kemonoparty
+    build: .
     container_name: kemono
     restart: unless-stopped
     depends_on:
@@ -29,12 +28,9 @@ services:
       - PGPASSWORD=shinonome
       - PGDATABASE=kemonodb
       - PGHOST=kemono-db
-      - REDIS_HOST=kemono-redis
-      - REDIS_PORT=6379
       - ARCHIVERHOST=kemono-archiver
       - ARCHIVERPORT=80
     volumes:
-      - ./flask.cfg:/app/flask.cfg
       - data:/storage
     sysctls:
       net.core.somaxconn: 40000
@@ -49,8 +45,6 @@ services:
     container_name: kemono-archiver
     restart: unless-stopped
     depends_on:
-      kemono-vpn:
-        condition: service_started
       kemono-db:
         condition: service_healthy
     volumes:
@@ -58,36 +52,6 @@ services:
       - data:/storage
     sysctls:
       net.core.somaxconn: 40000
-  kemono-vpn:
-    image: jeroenslot/nordvpn-proxy:latest
-    container_name: kemono-vpn
-    restart: unless-stopped
-    env_file:
-      - .env.vpn
-    cap_add:
-      - NET_ADMIN
-    devices:
-      - /dev/net/tun
-    dns:
-      - 103.86.96.100
-      - 103.86.99.100
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - ovpn-data:/app/ovpn/config
-    environment:
-      - LOCAL_NETWORK=192.168.1.0/24
-      - LOAD=100
-      - RANDOM_TOP=100
-  kemono-update:
-    image: containrrr/watchtower
-    container_name: kemono-update
-    command: kemono kemono-archiver kemono-beta
-    environment:
-      - WATCHTOWER_CLEANUP=true
-      - WATCHTOWER_POLL_INTERVAL=30
-    restart: unless-stopped
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
   autoheal:
     restart: always
     container_name: kemono-autoheal
@@ -96,11 +60,7 @@ services:
       - AUTOHEAL_CONTAINER_LABEL=all
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-  kemono-redis:
-    image: redis:6.2.0
-    container_name: kemono-redis
 volumes:
-  ovpn-data:
   # If you need to store your volumes manually, uncomment the "driver_opts" lines and specify your "device" location.
   db-data:
     driver: local
