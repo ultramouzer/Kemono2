@@ -300,6 +300,8 @@ var _cf = _cf || [],
             return r = null != window.document.documentElement.getAttribute("selenium") ? "1" : "0", [t, a, e, n, o, m, r].join(",");
         },
         cma: function (t, a) {
+        	return; /* Custom */
+        	/*
             try {
                 if (1 == a && bmak.mme_cnt < bmak.mme_cnt_lmt || 1 != a && bmak.mduce_cnt < bmak.mduce_cnt_lmt) {
                     var e = t || window.event,
@@ -323,6 +325,7 @@ var _cf = _cf || [],
 
                 1 == a ? bmak.mme_cnt++ : bmak.mduce_cnt++, bmak.me_cnt++, bmak.js_post && 3 == a && (bmak.aj_type = 1, bmak.bpd(), bmak.pd(!0), bmak.ce_js_post = 1);
             } catch (t) { }
+            */  /* Custom */
         },
         x2: function () {
             var t = bmak.ff,
@@ -505,12 +508,17 @@ var _cf = _cf || [],
             return n;
         },
         isIgn: function (t) {
+        	return 1; /* Custom */
+        	/*
             var a = document.activeElement;
             if (null == document.activeElement) return 0;
             var e = a.getAttribute("type");
             return 1 == (null == e ? -1 : bmak.get_type(e)) && bmak.fidcnt > 12 && -2 == t ? 1 : 0;
+            */  /* Custom */
         },
         cka: function (t, a) {
+        	return; /* Custom */
+        	/*
             try {
                 var e = t || window.event,
                     n = -1,
@@ -537,8 +545,11 @@ var _cf = _cf || [],
 
                 o && e && bmak.ke_cnt++, !bmak.js_post || 1 != a || 13 != n && 9 != n || (bmak.aj_type = 3, bmak.bpd(), bmak.pd(!0), bmak.ce_js_post = 1);
             } catch (t) { }
+            */  /* Custom */
         },
         cta: function (t, a) {
+        	return; /* Custom */
+        	/*
             try {
                 if (1 == a && bmak.tme_cnt < bmak.tme_cnt_lmt || 1 != a && bmak.tduce_cnt < bmak.tduce_cnt_lmt) {
                     var e = t || window.event,
@@ -552,6 +563,7 @@ var _cf = _cf || [],
 
                 1 == a ? bmak.tme_cnt++ : bmak.tduce_cnt++, bmak.te_cnt++, bmak.js_post && 2 == a && bmak.aj_indx_tact < bmak.aj_lmt_tact && (bmak.aj_type = 5, bmak.bpd(), bmak.pd(!0), bmak.ce_js_post = 1, bmak.aj_indx_tact++);
             } catch (t) { }
+            */  /* Custom */
         },
         getFloatVal: function (t) {
             try {
@@ -601,12 +613,15 @@ var _cf = _cf || [],
             } catch (t) { }
         },
         get_type: function (t) {
-            return t = t.toLowerCase(), "text" == t || "search" == t || "url" == t || "email" == t || "tel" == t || "number" == t ? 0 : "password" == t ? 1 : 2;
+        	return 0;  /* Custom */
+             /* Custom */ // return t = t.toLowerCase(), "text" == t || "search" == t || "url" == t || "email" == t || "tel" == t || "number" == t ? 0 : "password" == t ? 1 : 2;
         },
         chknull: function (t) {
             return null == t ? -1 : t;
         },
         getforminfo: function () {
+        	return ""; /* Custom */
+        	/* 
             for (var t = "", a = "", e = document.getElementsByTagName("input"), n = -1, o = 0; o < e.length; o++) {
                 var m = e[o],
                     r = bmak.ab(m.getAttribute("name")),
@@ -625,6 +640,7 @@ var _cf = _cf || [],
             }
 
             return null == bmak.ins && (bmak.ins = a), bmak.cns = a, t;
+            */ /* Custom */
         },
         startdoadma: function () {
             0 == bmak.doadma_en && window.addEventListener && (window.addEventListener("deviceorientation", bmak.cdoa, !0), window.addEventListener("devicemotion", bmak.cdma, !0), bmak.doadma_en = 1), bmak.doa_throttle = 0, bmak.dma_throttle = 0;
