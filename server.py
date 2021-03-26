@@ -57,6 +57,9 @@ cache.init_app(app)
 database.init()
 redis.init()
 
+app.config['ENABLE_PASSWORD_VALIDATOR'] = True
+app.config['ENABLE_LOGIN_RATE_LIMITING'] = True
+
 @app.before_request
 def do_init_stuff():
     g.request_start_time = datetime.datetime.now()
