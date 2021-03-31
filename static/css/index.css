@@ -702,3 +702,11 @@ thead th {
   background-color:#3a3d43;
   font-size: 8pt;
 }
+
+.ad-container {
+  text-align: center;
+}
+
+.ad-container * {
+  max-width: 100%;
+}
