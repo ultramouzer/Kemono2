@@ -53,3 +53,8 @@ def deserialize_dict_list(data):
     data = ujson.loads(data)
     to_return = list(map(lambda elem: deserialize_dict(elem), data))
     return to_return
+
+def delete_keys(pattern):
+    redis = get_conn()
+    keys = redis.keys(pattern)
+    redis.delete(*keys)

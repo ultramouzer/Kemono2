@@ -2,7 +2,7 @@ from flask import Blueprint, request, make_response, render_template, session, r
 
 from ..utils.utils import make_cache_key, get_value, restrict_value, sort_dict_list_by, take, offset, parse_int
 from ..lib.account import load_account
-from ..lib.favorites import get_favorite_artists, get_favorite_posts, add_favorite_post, add_favorite_artist, remove_favorite_post, remove_favorite_artist
+from ..lib.favorites import get_favorite_artists, get_favorite_posts, add_favorite_post, add_favorite_artist, remove_favorite_post, remove_favorite_artist, get_posts_by_favorited_artists
 from ..lib.security import is_password_compromised
 from ..internals.cache.flask_cache import cache
 
@@ -42,8 +42,32 @@ def list():
         'favorites.html',
         props = props,
         base = base,
-        source = 'account',
         results = results,
+    ), 200)
+    response.headers['Cache-Control'] = 's-maxage=60'
+    return response
+
+@favorites.route('/favorites/posts', methods=['GET'])
+def get_favorite_artist_posts():
+    account = load_account()
+    if account is None:
+        flash('We now support accounts! Register for an account and your current favorites will automatically be added to your account.')
+        return redirect(url_for('account.get_login'))
+
+    props = {
+        'currentPage': 'favorite_artist_posts'
+    }
+    base = request.args.to_dict()
+    base.pop('o', None)
+
+    offset = parse_int(request.args.get('o'), 0)
+
+    favorites = get_posts_by_favorited_artists(account['id'], offset)
+    response = make_response(render_template(
+        'posts.html',
+        props = props,
+        base = base,
+        results = favorites,
     ), 200)
     response.headers['Cache-Control'] = 's-maxage=60'
     return response

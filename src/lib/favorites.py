@@ -1,6 +1,6 @@
 from ..internals.database.database import get_cursor
 from ..utils.utils import get_value
-from ..internals.cache.redis import get_conn, serialize_dict_list, deserialize_dict_list
+from ..internals.cache.redis import get_conn, serialize_dict_list, deserialize_dict_list, delete_keys
 from ..lib.artist import get_artist, get_artist_last_updated
 from ..lib.post import get_post
 
@@ -64,7 +64,6 @@ def is_artist_favorited(account_id, service, artist_id, reload = False):
         redis.set(key, str(value))
     else:
         value = value.decode('utf-8') == 'True'
-
     return value
 
 def is_post_favorited(account_id, service, artist_id, post_id, reload = False):
@@ -79,8 +78,21 @@ def is_post_favorited(account_id, service, artist_id, post_id, reload = False):
         redis.set(key, str(value))
     else:
         value = value.decode('utf-8') == 'True'
-
     return value
+
+def get_posts_by_favorited_artists(account_id, offset, reload = False):
+    redis = get_conn()
+    key = 'posts_by_favorited_artists:' + str(account_id) + ':' + str(offset)
+    posts = redis.get(key)
+    if posts is None or reload:
+        cursor = get_cursor()
+        query = 'select p.* from posts p inner join account_artist_favorite aaf on p."user" = aaf.artist_id and p.service = aaf.service where aaf.account_id = %s offset %s limit 5'
+        cursor.execute(query, (account_id, offset,))
+        posts = cursor.fetchall()
+        redis.set(key, serialize_dict_list(posts))
+    else:
+        posts = deserialize_dict_list(posts)
+    return posts
 
 def add_favorite_artist(account_id, service, artist_id):
     cursor = get_cursor()
@@ -102,6 +114,7 @@ def remove_favorite_artist(account_id, service, artist_id):
     cursor.execute(query, (account_id, service, artist_id))
     get_favorite_artists(account_id, True)
     is_artist_favorited(account_id, service, artist_id, True)
+    delete_keys('posts_by_favorited_artists:' + str(account_id) + ':*')
 
 def remove_favorite_post(account_id, service, artist_id, post_id):
     cursor = get_cursor()
@@ -109,3 +122,4 @@ def remove_favorite_post(account_id, service, artist_id, post_id):
     cursor.execute(query, (account_id, service, artist_id, post_id))
     get_favorite_posts(account_id, True)
     is_post_favorited(account_id, service, artist_id, post_id, True)
+    delete_keys('posts_by_favorited_artists:' + str(account_id) + ':*')
