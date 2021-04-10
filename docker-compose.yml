@@ -13,14 +13,13 @@ services:
     # ports:
     #  - 5432:5432
   kemono-app:
-    build: .
+    image: openyiff/kemonoparty
     container_name: kemono
     restart: unless-stopped
     depends_on:
       kemono-db:
         condition: service_healthy
     ports:
-      - 8000:80
     env_file:
       - .env
     environment:
@@ -63,6 +62,19 @@ services:
   kemono-redis:
     image: redis:6.2.0
     container_name: kemono-redis
+  kemono-cache:
+    image: varnish
+    container_name: kemono-cache
+    restart: unless-stopped
+    depends_on:
+      kemono-app:
+        condition: service_healthy
+    ports:
+      - 8000:80
+    volumes:
+      - ./default.vcl:/etc/varnish/default.vcl
+    tmpfs:
+      - /var/lib/varnish:exec
 volumes:
   # If you need to store your volumes manually, uncomment the "driver_opts" lines and specify your "device" location.
   db-data:
