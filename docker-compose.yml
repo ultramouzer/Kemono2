@@ -69,8 +69,6 @@ services:
     depends_on:
       kemono-app:
         condition: service_healthy
-    environment:
-      - VARNISH_SIZE=10G
     ports:
       - 8000:80
     volumes:
