@@ -8,6 +8,7 @@ import logging
 from dotenv import load_dotenv
 load_dotenv(join(dirname(__file__), '.env'))
 from flask import Flask, render_template, request, redirect, g, abort, session
+from werkzeug.middleware.profiler import ProfilerMiddleware
 
 import src.internals.database.database as database
 import src.internals.cache.redis as redis
@@ -100,3 +101,6 @@ def close(e):
             pool = database.get_pool()
             connection.commit()
             pool.putconn(connection)
+
+# profiling
+app = ProfilerMiddleware(app, profile_dir='/tmp/profs')
