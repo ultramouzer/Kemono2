@@ -63,7 +63,7 @@ app.config['ENABLE_LOGIN_RATE_LIMITING'] = True
 def do_init_stuff():
     g.request_start_time = datetime.datetime.now()
     session.permanent = True
-    app.permanent_session_lifetime = timedelta(days=9999)
+    app.permanent_session_lifetime = timedelta(days=30)
     session.modified = False
 
 @app.after_request
