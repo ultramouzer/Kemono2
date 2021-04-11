@@ -84,6 +84,17 @@
         placeholder="Specify what the file/archive is, where the original post can be found, include relevant keys/passwords, etc."
       ></textarea>
     </div>
+    <div>
+      <label for="captcha-answer">Captcha</label>
+      <img src="data:image/png;base64,{{ captcha }}"><br>
+      <input 
+        type="text"
+        name="captcha_answer"
+        id="captcha-answer"
+        maxlength="5"
+        required
+      >
+    </div>
   </form>
   <div id="upload">
     <div class="upload-button" id="upload-button">

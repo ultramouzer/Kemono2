@@ -30,7 +30,8 @@ function update() {
         service: document.getElementById('service').value,
         user: document.getElementById('user').value,
         title: document.getElementById('title').value,
-        content: document.getElementById('content').value
+        content: document.getElementById('content').value,
+        captcha_answer: document.getElementById('captcha-answer').value
       }
     });
 
