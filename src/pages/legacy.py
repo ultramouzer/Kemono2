@@ -554,15 +554,11 @@ def importer_submit():
     try:
         r = requests.post(
             f'http://{host}:{port}/api/import',
-            json = {
+            data = {
                 'service': request.form.get("service"),
                 'session_key': request.form.get("session_key"),
-                'channel_ids': request.form.get("channel_ids")
-            },
-            params = {
-                'service': request.form.get("service"),
-                'session_key': request.form.get("session_key"),
-                'channel_ids': request.form.get("channel_ids")
+                'channel_ids': request.form.get("channel_ids"),
+                'save_session_key': request.form.get("save_session_key")
             }
         )
         r.raise_for_status()
