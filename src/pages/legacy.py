@@ -19,14 +19,13 @@ import requests
 from markupsafe import Markup
 from bleach.sanitizer import Cleaner
 from hashlib import sha256
-from flask_recaptcha import ReCaptcha
 
+from ..lib.captcha import generate_captcha
 from ..internals.database.database import get_cursor
 from ..internals.cache.flask_cache import cache
 from ..utils.utils import make_cache_key, relative_time, delta_key, allowed_file, limit_int
 
 legacy = Blueprint('legacy', __name__)
-recaptcha = ReCaptcha(site_key=getenv('RECAPTCHA_SITE_KEY'), secret_key=getenv('RECAPTCHA_SECRET'))
 
 @legacy.route('/thumbnail/<path:path>')
 def thumbnail(path):
@@ -220,7 +219,7 @@ def upload_post():
     response = make_response(render_template(
         'upload.html',
         props=props,
-        recaptcha=recaptcha.get_code()
+        captcha=generate_captcha()
     ), 200)
     response.headers['Cache-Control'] = 's-maxage=60'
     return response
@@ -585,7 +584,7 @@ def upload():
         'resumableChunkNumber': request.form.get('resumableChunkNumber')
     }
 
-    if not recaptcha.verify():
+    if request.form.get('captcha_answer') != session.get('captcha_answer'):
         return "Invalid/incorrect captcha.", 415
 
     if int(request.form.get('resumableTotalSize')) > int(getenv('UPLOAD_LIMIT')):
