@@ -86,14 +86,7 @@
     </div>
     <div>
       <label for="captcha-answer">Captcha</label>
-      <img src="data:image/png;base64,{{ captcha }}"><br>
-      <input 
-        type="text"
-        name="captcha_answer"
-        id="captcha-answer"
-        maxlength="5"
-        required
-      >
+      {{ recaptcha | safe }}
     </div>
   </form>
   <div id="upload">
