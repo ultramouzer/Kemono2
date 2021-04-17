@@ -20,7 +20,6 @@ from markupsafe import Markup
 from bleach.sanitizer import Cleaner
 from hashlib import sha256
 
-from ..lib.captcha import generate_captcha
 from ..internals.database.database import get_cursor
 from ..internals.cache.flask_cache import cache
 from ..utils.utils import make_cache_key, relative_time, delta_key, allowed_file, limit_int
@@ -218,8 +217,7 @@ def upload_post():
     }
     response = make_response(render_template(
         'upload.html',
-        props=props,
-        captcha=generate_captcha()
+        props=props
     ), 200)
     response.headers['Cache-Control'] = 's-maxage=60'
     return response
@@ -491,9 +489,6 @@ def upload():
         'resumableTotalChunks': request.form.get('resumableTotalChunks'),
         'resumableChunkNumber': request.form.get('resumableChunkNumber')
     }
-
-    if request.form.get('captcha_answer') != session.get('captcha_answer'):
-        return "Invalid/incorrect captcha.", 415
 
     if int(request.form.get('resumableTotalSize')) > int(getenv('UPLOAD_LIMIT')):
         return "File too large.", 415
