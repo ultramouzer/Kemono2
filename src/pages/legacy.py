@@ -221,7 +221,7 @@ def upload_post():
         props=props,
         captcha=generate_captcha()
     ), 200)
-    response.headers['Cache-Control'] = 'no-store, max-age=0'
+    response.headers['Cache-Control'] = 's-maxage=60'
     return response
 
 # TODO: /:service/user/:id/rss
