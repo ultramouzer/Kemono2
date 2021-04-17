@@ -493,6 +493,7 @@ def upload():
     }
 
     if request.form.get('captcha_answer') != session.get('captcha_answer'):
+        print(f"Invalid/incorrect captcha; {request.form.get('captcha_answer')} != {session.get('captcha_answer')}")
         return "Invalid/incorrect captcha.", 415
 
     if int(request.form.get('resumableTotalSize')) > int(getenv('UPLOAD_LIMIT')):
