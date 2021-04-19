@@ -9,7 +9,7 @@
     method="post"
     onsubmit="return (typeof submitted == 'undefined') ? (submitted = true) : !submitted"
   >
-    <select id="service" name="service" disabled>
+    <select id="service" name="service">
       <option value="patreon" selected>Patreon</option>
       <option value="fanbox">Pixiv Fanbox</option>
       <option value="gumroad">Gumroad</option>
@@ -27,7 +27,6 @@
       autocapitalize="off" 
       spellcheck="false"
       required
-      disabled
     >
     <input 
       type="text"
@@ -38,16 +37,15 @@
       autocorrect="off" 
       autocapitalize="off" 
       spellcheck="false"
-      disabled
     >
-    <input type="submit" disabled/>
+    <input type="submit"/>
     <div id="consent" style="width:100%;margin-top:5px">
       <input type="checkbox" checked="checked" id="save-session-key" name="save_session_key" value="1" style="display:inline;margin-right:5px"/>
       <label for="save-session-key" style="display:inline">I want to allow the development team to use my session for debugging (your session will be encrypted)</label>
     </div>
   </form>
   <p>
-    <span class="subtitle">Importer is temporarily disabled for debugging purposes. Sorry for the inconveinence.</span><br>
+    <span class="subtitle">Discord and DLsite importers are unimplemented. Sorry for the inconvenience.</span><br>
     <a href="/importer/tutorial">Learn how to get your session key.</a><br>
     <h2>Important information</h2>
     Your session key is used to scrape paid posts from your feed. After downloading missing posts, the key is immediately discarded and never stored.
