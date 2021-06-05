@@ -566,8 +566,8 @@ def upload():
     #         fields = ','.join(columns),
     #         values = ','.join(data)
     #     )
-    #     cursor = get_cursor()
-    #     cursor.execute(query, list(post_model.values()))
+    #     with get_cursor() as cursor:
+    #         cursor.execute(query, list(post_model.values()))
         
     #     return jsonify({
     #         "fileUploadStatus": True,
