@@ -85,10 +85,10 @@ def get_posts_by_favorited_artists(account_id, offset, reload = False):
     key = 'posts_by_favorited_artists:' + str(account_id) + ':' + str(offset)
     posts = redis.get(key)
     if posts is None or reload:
-        with get_cursor() as cursor:
-            query = 'select p.* from posts p inner join account_artist_favorite aaf on p."user" = aaf.artist_id and p.service = aaf.service where aaf.account_id = %s offset %s limit 25'
-            cursor.execute(query, (account_id, offset,))
-            posts = cursor.fetchall()
+        cursor = get_cursor()
+        query = 'select p.* from posts p inner join account_artist_favorite aaf on p."user" = aaf.artist_id and p.service = aaf.service where aaf.account_id = %s offset %s limit 25'
+        cursor.execute(query, (account_id, offset,))
+        posts = cursor.fetchall()
         redis.set(key, serialize_dict_list(posts))
     else:
         posts = deserialize_dict_list(posts)
