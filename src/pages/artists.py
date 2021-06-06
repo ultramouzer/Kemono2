@@ -76,6 +76,45 @@ def get_trending_artists():
     response.headers['Cache-Control'] = 's-maxage=60'
     return response
 
+@artists.route('/artists/updated')
+def updated():
+    props = {
+        'currentPage': 'artists'
+    }
+    base = request.args.to_dict()
+    base.pop('o', None)
+
+    offset = int(request.args.get('o') or 0)
+    limit = 25
+
+    props['limit'] = limit
+
+    posts_results = get_artists_by_update_time(offset=offset)
+    props["count"] = len(get_all_artists_by_update_time())
+
+    base = request.args.to_dict()
+    base.pop('o', None)
+
+    results = []
+    for post in posts_results:
+        user_result = get_artist(post['service'], post['user'])
+        if not user_result:
+            continue
+        results.append({
+            "id": post['user'],
+            "name": user_result['name'],
+            "service": post['service'],
+            "updated": post['max']
+        })
+    response = make_response(render_template(
+        'updated.html',
+        base = base,
+        props = props,
+        results = results
+    ), 200)
+    response.headers['Cache-Control'] = 'max-age=60, public, stale-while-revalidate=2592000'
+    return response
+
 @artists.route('/<service>/user/<artist_id>')
 def get(service, artist_id):
     cursor = get_cursor()
