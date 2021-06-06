@@ -78,6 +78,7 @@ def get_trending_artists():
 
 @artists.route('/<service>/user/<artist_id>')
 def get(service, artist_id):
+    cursor = get_cursor()
     props = {
         'currentPage': 'posts',
         'id': artist_id,
