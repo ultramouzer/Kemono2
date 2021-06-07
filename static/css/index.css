@@ -149,7 +149,7 @@ html, button, input, select, textarea, .pure-g [class *= "pure-u"] {
   background: #3a3d43;
 }
 
-.jumbo p {
+.jumbo p, .jumbo h2 {
   margin: 0;
 }
 
