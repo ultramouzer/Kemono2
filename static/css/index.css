@@ -858,3 +858,16 @@ thead th {
 }
 
 /* END Forms */
+
+.vinerizon {
+  display: none;
+  margin: 0 auto;
+}
+
+.verizon-warning:hover .verizon {
+  display: none;
+}
+
+.verizon-warning:hover .vinerizon {
+  display: block;
+}
