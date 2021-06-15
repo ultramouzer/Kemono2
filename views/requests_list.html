@@ -90,9 +90,9 @@
             <tr class="artist-row">
               <td>
                 {% if ticket.get('image') %}
-                  <a href="{{ 'https://data.kemono.party' ~ ticket.get('image') }}" target="_blank">
+                  <a href="{{ ticket.get('image') }}" target="_blank">
                   {# Thumbnails temporarily removed #}
-                    <img src="{{ 'https://data.kemono.party' ~ ticket.get('image') }}">
+                    <img src="{{ ticket.get('image') }}">
                   </a>
                 {% else %}
                   <span class="subtitle">No image</span>
