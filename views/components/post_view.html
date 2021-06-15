@@ -29,7 +29,7 @@
 {% endif %}
 <br>
 {% for attachment in attachments %}
-  <a href="{{ 'https://data.kemono.party' ~ attachment.path }}" target="_blank">
+  <a href="{{ attachment.path }}" target="_blank">
     Download {{ attachment.name }}
   </a>
   <br>
@@ -42,7 +42,7 @@
 </p>
 {% for preview in previews %}
   {% if preview.type == 'thumbnail' %}
-    <a class="fileThumb" href="{{ 'https://data.kemono.party' ~ preview.path }}">
+    <a class="fileThumb" href="{{ preview.path }}">
       <img
         data-src="/thumbnail{{ preview.path }}"
         src="/thumbnail{{ preview.path }}"
