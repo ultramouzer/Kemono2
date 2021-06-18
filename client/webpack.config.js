@@ -19,6 +19,32 @@ const webpackConfig = {
     index: "./src/js/index.js"
   },
   plugins: [
+    // party pages
+    new HTMLWebpackPlugin({
+      template: "./src/" + templatePath.base("dmca"),
+      filename: templatePath.base("dmca"),
+      chunks: [],
+      minify: false
+    }),
+    new HTMLWebpackPlugin({
+      template: "./src/" + templatePath.base("support"),
+      filename: templatePath.base("support"),
+      chunks: [],
+      minify: false
+    }),
+    // party components
+    new HTMLWebpackPlugin({
+      template: "./src/" + templatePath.components("footer"),
+      filename: templatePath.components("footer"),
+      chunks: [],
+      minify: false
+    }),
+    new HTMLWebpackPlugin({
+      template: "./src/" + templatePath.components("support_sidebar"),
+      filename: templatePath.components("support_sidebar"),
+      chunks: [],
+      minify: false
+    }),
     // components
     new HTMLWebpackPlugin({
       template: "./src/" + templatePath.components("artist_list"),
