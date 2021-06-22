@@ -11,7 +11,6 @@ const baseConfig = require("./webpack.config");
  */
 const webpackConfigProd = {
   mode: "production",
-  devtool: "source-map",
   plugins: [
     new CopyWebpackPlugin({
       patterns: [
@@ -22,8 +21,8 @@ const webpackConfigProd = {
       ]
     }),
     new MiniCSSExtractPlugin({
-      filename: "static/bundle/css/[name]-[contenthash].css",
-      chunkFilename: "static/bundle/css/[id]-[contenthash].chunk.css"
+      filename: "static/css/[name]-[contenthash].css",
+      chunkFilename: "static/css/[id]-[contenthash].chunk.css"
     }),
     // new FaviconsWebpackPlugin({
     //   logo:"./src/assets/logo/kemono-logo.svg",
@@ -72,33 +71,25 @@ const webpackConfigProd = {
       },
 
       {
-        test: /\.(png|jpg|jpeg|gif|webp)$/i,
+        test: /\.(png|svg|jpg|jpeg|gif|webp)$/i,
         type: 'asset/resource',
         generator: {
-          filename: "static/bundle/assets/[name]-[contenthash][ext][query]"
+          filename: "static/assets/[name]-[contenthash][ext][query]"
         }
       },
       {
         test: /\.(woff|woff2|eot|ttf|otf)$/i,
         type: 'asset/resource',
         generator: {
-          filename: "static/bundle/fonts/[name]-[contenthash][ext][query]"
-        }
-      },
-      {
-        test: /\.svg$/i,
-        type: 'asset/resource',
-        generator: {
-          filename: "static/bundle/svg/[name]-[contenthash][ext][query]"
+          filename: "static/fonts/[name]-[contenthash][ext][query]"
         }
       },
     ]
   },
   output: {
     path: path.resolve(__dirname, "dist"),
-    filename: "static/bundle/js/[name]-[contenthash].bundle.js",
-    assetModuleFilename: "static/bundle/assets/[name]-[contenthash][ext][query]",
-    sourceMapFilename: "source-maps/[file].map[query]",
+    filename: "static/js/[name]-[contenthash].bundle.js",
+    assetModuleFilename: "static/assets/[name]-[contenthash][ext][query]",
     publicPath: "/",
     clean: true,
   },

@@ -1,80 +1,61 @@
 <!DOCTYPE html>
-<html prefix="og: https://ogp.me/ns#">
+<html>
   <head>
     <script>var page_data = {{ render_page_data()|safe }}</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>
-      {{ props.name ~ " | Kemono" if props.name else "Kemono" }}
-    </title>
-    <link rel="shortcut icon" href="/static/favicon.ico">
-    
-    {% block meta %}
-      {% if props.service %}
-        <meta name="service" content="{{ props.service }}">
+    <title>{{ props.name ~ " | Kemono" if props.name else "Kemono" }}</title>
+    <link rel="shortcut icon" href="/static/favicon.ico"/>
+    <link rel="stylesheet" href="https://unpkg.com/purecss@2.0.5/build/base-min.css">
+    <link rel="stylesheet" href="https://unpkg.com/purecss@2.0.5/build/grids-min.css">
+    <link rel="stylesheet" href="https://unpkg.com/purecss@2.0.5/build/grids-responsive-min.css">
+    {% if props.compatibility %}
+      <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/compatibility.css') }}">
+    {% else %}
+      <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/index.css') }}">
+    {% endif %}
+    {% if props.discord %}
+      <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/discord.css') }}">
+    {% endif %}
+    {% if props.service %}
+      <meta name="service" content="{{ props.service }}"/>
+    {% endif %}
+    {% if props.id %}
+      <meta name="id" content="{{ props.id }}"/>
+    {% endif %}
+    {% if props.importId %}
+      <meta name="importId" content="{{ props.importId }}"/>
+    {% endif %}
+    {% if props.count %}
+      <meta name="count" content="{{ props.count }}"/>
+    {% endif %}
+    {% if props.posts|length %}
+      {% if props.posts[0].published %}
+        <meta name="published" content="{{ props.posts[0].published }}"/>
       {% endif %}
-      {% if props.id %}
-        <meta name="id" content="{{ props.id }}">
-      {% endif %}
-      {% if props.importId %}
-        <meta name="importId" content="{{ props.importId }}">
-      {% endif %}
-      {% if props.count %}
-        <meta name="count" content="{{ props.count }}">
-      {% endif %}
-      {% if props.posts|length %}
-        {% if props.posts[0].published %}
-          <meta name="published" content="{{ props.posts[0].published }}"/>
-        {% endif %}
-        <meta name="added" content="{{ props.posts[0].added }}"/>
-        <meta name="id" content="{{ props.posts[0].id }}"/>
-      {% endif %}
-    {% endblock meta %}
-
-    {% block opengraph %}
-      <meta property="og:title" content="{{ props.name ~ ' | Kemono' if props.name else 'Kemono' }}">
-      <meta property="og:type" content="website">
-      <meta property="og:site_name" content="Kemono">
-      <meta property="og:image" content="/favicon.ico">
-      <meta property="og:url" content="{{ g.canonical_url }}">
-    {% endblock opengraph %}
-
-    {% block styles %}
-      <link rel="stylesheet" href="https://unpkg.com/purecss@2.0.5/build/base-min.css">
-      <link rel="stylesheet" href="https://unpkg.com/purecss@2.0.5/build/grids-min.css">
-      <link rel="stylesheet" href="https://unpkg.com/purecss@2.0.5/build/grids-responsive-min.css">
-    {% endblock styles %}
-
+      <meta name="added" content="{{ props.posts[0].added }}"/>
+      <meta name="id" content="{{ props.posts[0].id }}"/>
+    {% endif %}
     {% block scripts %}
       {% if request.args.logged_in %}
         <script>
           localStorage.setItem('logged_in', 'yes');
         </script>
       {% endif %}
-    {% endblock scripts %}
-
+      <script src="{{ url_for('static', filename='js/global.js') }}" defer></script>
+    {% endblock %}
     {% block scripts_extra %}
-    {% endblock scripts_extra %}
+    {% endblock %}
   </head>
   <body>
-    <header class="global-header">
+    <div class="main" id="main">
       {% include 'components/header.html' %}
       {% include 'components/subheader.html' %}
       {% include 'components/flash_messages.html' %}
-    </header>
-    <main class="main" id="main">
+      <div class="sep"></div>
       {% block content %}
-      {% endblock content %}
-    </main>
-    <footer class="global-footer">
-      <div
-        id="component-container" 
-        class="component-container" 
-        hidden
-      >
-        {% block components %}
-        {% endblock components %}
-      </div>
-    </footer>
+      {% endblock %}
+      {% include 'components/footer.html' %}
+    </div>
   </body>
 </html>
