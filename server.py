@@ -3,6 +3,7 @@ import datetime
 from datetime import timedelta
 from os import getenv
 from os.path import join, dirname
+from urllib.parse import urljoin
 
 import logging
 from dotenv import load_dotenv
@@ -70,6 +71,7 @@ app.config['ENABLE_LOGIN_RATE_LIMITING'] = True
 def do_init_stuff():
     g.page_data = {}
     g.request_start_time = datetime.datetime.now()
+    g.canonical_url = urljoin(getenv("KEMONO_SITE"), request.path)
     session.permanent = True
     app.permanent_session_lifetime = timedelta(days=30)
     session.modified = False
@@ -111,4 +113,3 @@ def close(e):
                 pool.putconn(connection)
             except:
                 pass
-            
