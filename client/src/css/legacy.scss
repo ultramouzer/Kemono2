@@ -704,3 +704,17 @@ thead th {
 .verizon-warning:hover .vinerizon {
   display: block;
 }
+
+@keyframes morph {
+  0% { background-color: #8BC14B; }
+  16% { background-color: #E1097C; }
+  33% { background-color: #7E2270; }
+  50% { background-color: #009891; }
+  66% { background-color: #383875; }
+  83% { background-color: #F15B29; }
+  100% { background-color: #8BC14B; }
+}
+
+.fantia-announcement {
+  animation: morph 10s infinite;
+}
