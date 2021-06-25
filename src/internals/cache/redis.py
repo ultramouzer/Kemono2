@@ -57,4 +57,5 @@ def deserialize_dict_list(data):
 def delete_keys(pattern):
     redis = get_conn()
     keys = redis.keys(pattern)
-    redis.delete(*keys)
+    if (len(keys)):
+        redis.delete(*keys)
