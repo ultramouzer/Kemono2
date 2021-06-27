@@ -42,10 +42,10 @@ def list():
     favorites = []
     fave_type = get_value(request.args, 'type', 'artist')
     if fave_type == 'post':
-        favorites = get_favorite_posts(account['id'], reload=True)
+        favorites = get_favorite_posts(account['id'])
         sort_field = restrict_value(get_value(request.args, 'sort'), ['faved_seq', 'published'], 'faved_seq')
     else:
-        favorites = get_favorite_artists(account['id'], reload=True)
+        favorites = get_favorite_artists(account['id'])
         sort_field = restrict_value(get_value(request.args, 'sort'), ['faved_seq', 'updated'], 'updated')
 
     offset = parse_int(request.args.get('o'), 0)
