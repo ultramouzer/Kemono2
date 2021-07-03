@@ -181,9 +181,23 @@
     </div>
     {# presumably there will be `comments` or `props.comments` in the context #}
     <footer class="post__footer">
+      {% set is_user = comment.commenter == post.user %}
       {% for comment in comments %}
-        <article class="comment" id="{{ comment.id }}">
+        <article 
+          class="comment {{ comment--user if is_user }}" 
+          id="{{ comment.id }}"
+        >
           <header class="comment__header">
+            {% if comment.parent_id %}
+              <div class="comment__reply">
+                <a href="#{{ comment.parent_id }}">
+                  >>{{comment.parent_id}}
+                </a>
+              </div>
+            {% endif %} 
+            <div class="comment__name">
+              {{ props.artist.name if is_user and props.artist else comment.commenter }}
+            </div>
           </header>
           <section class="comment__body">
             {{ content | safe }}

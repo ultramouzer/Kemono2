@@ -190,3 +190,19 @@
     }
   }
 }
+
+.comment {
+  &--user {
+    background-color: hsl(350, 100%, 88%);
+  }
+
+  &__header {}
+
+  &__reply {}
+
+  &__name {}
+
+  &__body {}
+
+  &__footer {}
+}
