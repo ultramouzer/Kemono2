@@ -1,6 +1,6 @@
 {% extends 'components/shell.html' %}
 
-{% from 'components/timestamp' import timestamp %}
+{% from 'components/timestamp.html' import timestamp %}
 
 {% set post_title = post.title ~ " by " ~ props.artist.name ~ " from " ~ g.paysites[props.service].title ~ " | Kemono" if props.artist else post.title ~ " | Kemono" %}
 
