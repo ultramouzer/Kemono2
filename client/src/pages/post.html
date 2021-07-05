@@ -2,9 +2,9 @@
 
 {% from 'components/timestamp.html' import timestamp %}
 {% from 'components/links.html' import kemono_link, local_link %}
-{% from 'components/fancy_image.html' import fancy_image %}
+{% from 'components/fancy_image.html' import fancy_image, background_image %}
 
-{% set paysite = g[props.service] %}
+{% set paysite = g.paysites[props.service] %}
 {% set page_title = post.title ~ " by " ~ props.artist.name ~ " from " ~ paysite.title ~ " | Kemono" if props.artist else post.title ~ " | Kemono" %}
 
 {% macro post_view(post, attachments, previews) %}
@@ -118,6 +118,7 @@
 
     <header class="post__header">
       <div class="post__user">
+        {{ background_image('/banners/' ~ post.service ~ '/' ~ post.user) }}
         <div
           class="post__user-profile" 
         >
@@ -184,7 +185,7 @@
     </div>
 
     <footer class="post__footer">
-      <h2>Comments</h2>
+      <h2 class="site-section__subheading">Comments</h2>
       {# TODO: comment filters #}
       <div class="post__comments {{ 'post__comments--no-comments' if not comments }}">
         {% for comment in comments %}

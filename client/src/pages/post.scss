@@ -17,14 +17,15 @@
     flex-flow: row nowrap;
     justify-content: flex-start;
     align-items: center;
-    background-color: var(--colour1-secondary);
     border: solid hsla(0, 0%, 50%, 0.7) $size-thin;
     border-radius: 10px 10px 0 0;
     overflow: hidden;
   }
 
   &__user {
+    position: relative;
     text-align: center;
+    background-color: hsla(0, 0%, 0%, 0.7);
     border-right: solid hsla(0, 0%, 50%, 0.7) $size-thin;
     padding: 0.5em;
   }
@@ -48,6 +49,7 @@
   }
 
   &__info {
+    background-color: var(--colour1-secondary);
     padding: 0.5em;
     padding-left: 2em;
 
