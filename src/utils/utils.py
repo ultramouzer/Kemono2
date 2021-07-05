@@ -13,7 +13,7 @@ paysite_list = [
     "fantia"
 ]
 # because fanbox requires `post_id` and `artist_id` for post link
-# any generic call to paysite post link should have 2 arguments
+# any generic call to `paysite.post.link()` should have 2 arguments
 paysites = {
     "patreon": {
         "title": "Patreon",
