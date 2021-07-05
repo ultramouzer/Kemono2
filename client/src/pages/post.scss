@@ -16,7 +16,7 @@
     display: flex;
     flex-flow: row nowrap;
     justify-content: flex-start;
-    align-items: center;
+    align-items: stretch;
     border: solid hsla(0, 0%, 50%, 0.7) $size-thin;
     border-radius: 10px 10px 0 0;
     overflow: hidden;
@@ -49,6 +49,10 @@
   }
 
   &__info {
+    flex: 1 1 auto;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
     background-color: var(--colour1-secondary);
     padding: 0.5em;
     padding-left: 2em;
