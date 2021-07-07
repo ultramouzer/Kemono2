@@ -234,7 +234,10 @@
 
   &__profile {}
 
-  &__icon {}
+  &__icon {
+    width: 2em;
+    height: 2em;
+  }
 
   &__name {}
 
