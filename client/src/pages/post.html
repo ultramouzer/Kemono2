@@ -235,7 +235,11 @@
             </footer>
           </article>
         {% else %}
-          <p class="subtitle">No comments found for this post.</p>
+          {% if post.service != 'patreon' %}
+            <p class="subtitle">{{ paysite.title }} does not support comment scraping yet.</p>
+          {% else %}
+            <p class="subtitle">No comments found for this post.</p>
+          {% endif %}
         {% endfor %}
       </div>
       
