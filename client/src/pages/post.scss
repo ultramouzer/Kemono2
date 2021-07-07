@@ -235,8 +235,11 @@
   &__profile {}
 
   &__icon {
-    width: 2em;
-    height: 2em;
+    display: inline-block;
+    border-radius: 5px;
+    overflow: hidden;
+    width: 1em;
+    height: 1em;
   }
 
   &__name {}
