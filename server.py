@@ -32,8 +32,8 @@ from src.pages.dmca import dmca
 
 app = Flask(
     __name__,
-    static_folder='client/dev/static',
-    template_folder='client/dev/pages'
+    static_folder='dist/static',
+    template_folder='dist/pages'
 )
 
 app.url_map.strict_slashes = False
