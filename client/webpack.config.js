@@ -1,8 +1,7 @@
 const path = require("path");
-const { DefinePlugin } = require("webpack");
-const CopyWebpackPlugin = require("copy-webpack-plugin");
+// const { WebpackManifestPlugin } = require("webpack-manifest-plugin");
+
 const { buildHTMLWebpackPlugins } = require("./configs/build-templates");
-const { kemonoSite, nodeEnv } = require("./configs/vars");
 
 const projectPath = path.resolve(__dirname, "src");
 const pagesPath = path.join(projectPath, "pages");
@@ -24,18 +23,6 @@ const webpackConfig = {
   plugins: [
     ...pagePlugins,
     ...componentPlugins,
-    new DefinePlugin({
-      "BUNDLER_ENV_KEMONO_SITE": JSON.stringify(kemonoSite),
-      "BUNDLER_ENV_NODE_ENV": JSON.stringify(nodeEnv),
-    }),
-    new CopyWebpackPlugin({
-      patterns: [
-        {
-          from: "static",
-          to: "static"
-        }
-      ]
-    }),
   ],
   resolve: {
     extensions: [".js"],

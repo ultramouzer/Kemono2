@@ -7,9 +7,7 @@ freesites = {
     "kemono": {
         "title": "Kemono",
         "user": {
-            "profile": lambda service, user_id: f"/{service}/{ 'server' if service == 'discord' else 'user' }/{user_id}",
-            "icon": lambda service, user_id: f"/icons/{service}/{user_id}",
-            "banner": lambda service, user_id: f"/banners/{service}/{user_id}"
+            "profile": lambda: f""
         },
         "post": {
             "link": lambda service, user_id, post_id: f"/{service}/user/{user_id}/post/{post_id}"

@@ -6,7 +6,7 @@ import { registerPage } from "./register";
 import { postPage } from "./post";
 import { importerPage } from "./importer_list";
 import { postsPage } from "./posts";
-import { artistsPage } from "./artists";
+
 
 /**
  * The map of page names and their callbacks.
@@ -18,7 +18,6 @@ const pages = new Map([
   ["importer", importerPage],
   ["bans", bansPage],
   ["posts", postsPage],
-  ["artists", artistsPage],
 ]);
 
 /**
@@ -43,8 +42,7 @@ export function initSections(isLoggedIn) {
     const sectionName = /site-section--([a-z]+)/i.exec(section.className)[1];
 
     if (pages.has(sectionName)) {
-      const sectionCallback = pages.get(sectionName);
-      sectionCallback(section);
+      pages.get(sectionName)(section);
     }
   });
 

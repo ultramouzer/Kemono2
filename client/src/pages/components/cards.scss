@@ -32,13 +32,11 @@
     & .post-card__image-container {
       visibility: hidden;
       opacity: 0;
-      pointer-events: none;
     }
 
     & .post-card__view {
       visibility: hidden;
       opacity: 0;
-      pointer-events: none;
     }
   }
 
@@ -47,7 +45,6 @@
     padding: $size-small;
   }
 
-  // TODO: fix 
   &__view {
     position: absolute;
     top: 0;
@@ -66,6 +63,7 @@
     margin-bottom: 0.5em;
   }
 
+  // TODO: look into it further
   &__image-container {
     position: absolute;
     top: calc(44px + 0.5em);
