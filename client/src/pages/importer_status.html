@@ -9,22 +9,23 @@
   <header class="site-section__header">
     <h1 class="site-section__heading">Importer logs</h1>
   </header>
-  <div class="info">
-    {% if props.dms %}
-      <div id="dm-reminder">
-        <div class="jumbo no-posts">
-          <strong>Hey!</strong>
-          <p>
-            You gave the importer permission to access your messages. To protect your anonymity, you must manually approve each one. Wait until <i>after</i> the importer says <code>Done importing DMs</code>, then go <a href="/importer/dms/{{ props.id }}">here</a> to choose which ones you wish to import.
-          </p>
-        </div>
-      </div>
-    {% endif %}
-    <div class="logs" id="logs">
+  {% if props.dms %}
+    <div class="jumbo no-posts">
+      <strong>Hey!</strong>
+      <p>
+        You gave the importer permission to access your messages. To protect your anonymity, you must manually approve each one. Wait until <i>after</i> the importer says <code>Done importing DMs</code>, then go <a href="/importer/dms/{{ props.id }}">here</a> to choose which ones you wish to import.
+      </p>
     </div>
-  </div>
+  {% endif %}
+  <ul id="logs" class="log-list">
+  </ul>
 </section>
 {% endblock content %}
-
+  
 {% block components %}
+  {{ log_item() }}
 {% endblock components %}
+
+{% macro log_item() %}
+  <li class="log-list__item"></li>
+{% endmacro %}

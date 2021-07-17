@@ -1,14 +1,10 @@
 .site-section--importer-status {
-  .info {
-    border: 1px solid hsl(0, 0%, 7%);
-    background: hsl(220, 7%, 17%);
-  }
-  
-  .info .logs {
-    background-color:hsl(220, 7%, 25%);
-  }
-  
   .jumbo.no-posts {
     background-color: hsl(211, 100%, 49%);
+  }
+  
+  .log-list {
+    border: 1px solid hsl(0, 0%, 7%);
+    background: hsl(220, 7%, 17%);
   }
 }
