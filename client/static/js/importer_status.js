@@ -1,8 +1,19 @@
 (function() {
     var logs = [];
     var import_id = page_data.import_id;
+    var dms_imported = page_data.dms;
 
     window.addEventListener('load', async function() {
+        if (dms_imported) {
+            document.getElementById('dm-reminder').innerHTML += `
+                <div class="jumbo no-posts" style="background-color: #007BFB;">
+                    <strong>Hey!</strong>
+                    <p>
+                      You gave the importer permission to access your messages. To protect your anonymity, you must manually approve each one. Wait until <i>after</i> the importer says <code>Done importing DMs</code>, then go <a href="/importer/dms/${import_id}">here</a> to choose which ones you wish to import.
+                    </p>
+                </div>
+            `
+        }
         await fetchAndShowLogs();
     });
 

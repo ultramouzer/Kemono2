@@ -2,6 +2,7 @@ from flask import Blueprint, request, make_response, render_template, current_ap
 
 import requests
 from os import getenv
+from ..lib.dms import get_unapproved_dms
 
 importer_page = Blueprint('importer_page', __name__)
 
@@ -51,10 +52,29 @@ def importer_status(import_id):
     }
 
     g.page_data['import_id'] = import_id
+    if request.args.get('dms'):
+        g.page_data['dms'] = request.args.get('dms')
 
     response = make_response(render_template(
         'importer_status.html',
         props = props
+    ), 200)
+
+    response.headers['Cache-Control'] = 'max-age=0, private, must-revalidate'
+    return response
+
+@importer_page.route('/importer/dms/<import_id>')
+def importer_dms(import_id):
+    props = {
+        'currentPage': 'import',
+    }
+
+    dms = get_unapproved_dms(import_id)
+
+    response = make_response(render_template(
+        'importer_dms.html',
+        props = props,
+        dms = dms
     ), 200)
 
     response.headers['Cache-Control'] = 'max-age=0, private, must-revalidate'
@@ -87,7 +107,8 @@ def importer_submit():
                 'service': request.form.get("service"),
                 'session_key': request.form.get("session_key"),
                 'channel_ids': request.form.get("channel_ids"),
-                'save_session_key': request.form.get("save_session_key")
+                'save_session_key': request.form.get("save_session_key"),
+                'save_dms': request.form.get("save_dms")
             }
         )
 
@@ -95,7 +116,7 @@ def importer_submit():
         import_id = r.text
         props = {
             'currentPage': 'import',
-            'redirect': f'/importer/status/{import_id}'
+            'redirect': f'/importer/status/{import_id}{ "?dms=1" if request.form.get("save_dms") else "" }'
         }
         return make_response(render_template(
             'success.html',
