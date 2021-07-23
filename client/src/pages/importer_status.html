@@ -1,12 +1,28 @@
 {% extends 'components/shell.html' %}
+
+{% block meta %}
+  <meta name="import_id" content="{{ props.import_id }}">
+{% endblock meta %}
+
 {% block content %}
-<script type="text/javascript" src="/static/js/importer_status.js"></script>
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/importer.css') }}">
-<div class="info">
-  <div id="dm-reminder"></div>
-  <p>
-    <strong>Importer logs</strong><br>
-    <div class="logs" id="logs"></div>
-  </p>
-</div>
-{% endblock %}
+<section class="site-section site-section--importer-status">
+  <div class="info">
+    <div id="dm-reminder">
+    </div>
+    <p>
+      <strong>Importer logs</strong>
+    </p>
+    <div class="logs" id="logs">
+    </div>
+  </div>
+</section>
+{% endblock content %}
+
+{% block components %}
+  <div class="jumbo no-posts">
+    <strong>Hey!</strong>
+    <p>
+      You gave the importer permission to access your messages. To protect your anonymity, you must manually approve each one. Wait until <i>after</i> the importer says <code>Done importing DMs</code>, then go <a href="/importer/dms/{{ props.id }}">here</a> to choose which ones you wish to import.
+    </p>
+  </div>
+{% endblock components %}

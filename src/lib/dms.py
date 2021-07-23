@@ -6,7 +6,7 @@ import dateutil
 import copy
 import datetime
 
-def get_unapproved_dms(import_id, reload = False):
+def get_unapproved_dms(import_id: str, reload: bool = False):
     redis = get_conn()
     key = 'unapproved_dms:' + import_id
     dms = redis.get(key)

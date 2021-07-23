@@ -50,10 +50,12 @@ def importer_status(import_id):
     props = {
         'currentPage': 'import',
     }
-
-    g.page_data['import_id'] = import_id
+    
     if request.args.get('dms'):
         g.page_data['dms'] = request.args.get('dms')
+        props['dms'] = request.args.get('dms')
+
+    props['import_id'] = import_id
 
     response = make_response(render_template(
         'importer_status.html',
@@ -69,12 +71,11 @@ def importer_dms(import_id):
         'currentPage': 'import',
     }
 
-    dms = get_unapproved_dms(import_id)
+    props['dms'] = get_unapproved_dms(import_id)
 
     response = make_response(render_template(
         'importer_dms.html',
         props = props,
-        dms = dms
     ), 200)
 
     response.headers['Cache-Control'] = 'max-age=0, private, must-revalidate'
