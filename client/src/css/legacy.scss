@@ -86,6 +86,72 @@
   }
 }
 
+a.jumbo-link {
+  color: inherit;
+  padding: 0;
+}
+
+// .shill-jumbo {
+//   background-color: #ff443a;
+// }
+
+.shill-container {
+  display: flex;
+  justify-content: center;
+}
+
+@keyframes animateHeart {
+  // scale down and scale up faster in irregular intervals to get the throbbing effect
+  0% {
+    transform: rotate(45deg) scale(0.8);
+  }
+  5% {
+    transform: rotate(45deg) scale(0.9);
+  }
+  10% {
+    transform: rotate(45deg) scale(0.8);
+  }
+  15% {
+    transform: rotate(45deg) scale(1);
+  }
+  50% {
+    transform: rotate(45deg) scale(0.8);
+  }
+  100% {
+    transform: rotate(45deg) scale(0.8);
+  }
+}
+
+.shill-heart {
+  background-color: #ff443a;
+  width: 14px;
+  height: 14px;
+  position: relative;
+  transform: rotate(45deg);
+  margin-right: 12px;
+  animation: animateHeart 1.2s infinite;
+}
+
+.shill-heart {
+  &::before,
+  &::after {
+    position: absolute;
+    content: '';
+    width: 14px;
+    height: 14px;
+    background-color: #ff443a;
+    border-radius: 50%;
+  }
+
+  &::before {
+    left: -7px;
+  }
+
+  &::after {
+    top: -7px;
+  }
+}
+
 .jumbo-user {
   text-align: center;
 }
