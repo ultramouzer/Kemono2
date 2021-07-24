@@ -1,0 +1,13 @@
+@use "../css/variables" as *;
+
+.site-section--importer-dms {
+  .dms {
+    max-width: $width-phone;
+  }
+
+  .direct-message {
+    &__header {}
+    &__body {}
+    &__footer {}
+  }
+}

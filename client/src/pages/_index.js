@@ -6,6 +6,7 @@ import { registerPage } from "./register";
 import { postPage } from "./post";
 import { importerPage } from "./importer_list";
 import { importerStatusPage } from "./importer_status";
+import { importerDMSPage } from "./importer_dms";
 
 /**
  * The map of page names and their callbacks.
@@ -17,6 +18,7 @@ const pages = new Map([
   ["importer", importerPage],
   ["bans", bansPage],
   ["importer-status", importerStatusPage],
+  ["importer-dms", importerDMSPage],
 ]);
 
 /**
