@@ -20,6 +20,35 @@ def get_unapproved_dms(import_id: str, reload: bool = False):
         dms = deserialize_dms(dms)
     return dms
 
+def get_artist_dms(service, artist_id, reload: bool = False):
+    redis = get_conn()
+    key = 'dms:' + service + ':' + str(artist_id)
+    dms = redis.get(key)
+    if dms is None or reload:
+        cursor = get_cursor()
+        query = 'SELECT * FROM dms WHERE service = %s AND "user" = %s'
+        cursor.execute(query, (service, artist_id))
+        dms = cursor.fetchall()
+        redis.set(key, serialize_dms(dms), ex = 600)
+    else:
+        dms = deserialize_dms(dms)
+    return dms
+
+def cleanup_unapproved_dms(import_id: str):
+    cursor = get_cursor()
+    query = 'DELETE FROM unapproved_dms WHERE import_id = %s'
+    cursor.execute(query, (import_id,))
+
+    return True
+
+def approve_dm(import_id, dm_id):
+    cursor = get_cursor()
+    query = 'INSERT INTO dms (id, "user", service, content, embed, added, published, file) SELECT id, "user", service, content, embed, added, published, file FROM unapproved_dms WHERE import_id = %s AND id = %s; '
+    query += 'DELETE FROM unapproved_dms WHERE import_id = %s AND id = %s;'
+    cursor.execute(query, (import_id, dm_id, import_id, dm_id))
+
+    return True
+
 def serialize_dms(dms):
     dms = copy.deepcopy(dms)
     return ujson.dumps(list(map(lambda dm: prepare_dm_fields(dm), dms)))

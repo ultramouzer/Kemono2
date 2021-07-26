@@ -2,7 +2,7 @@ from flask import Blueprint, request, make_response, render_template, current_ap
 
 import requests
 from os import getenv
-from ..lib.dms import get_unapproved_dms
+from ..lib.dms import get_unapproved_dms, approve_dm, cleanup_unapproved_dms
 
 importer_page = Blueprint('importer_page', __name__)
 
@@ -65,7 +65,7 @@ def importer_status(import_id):
     response.headers['Cache-Control'] = 'max-age=0, private, must-revalidate'
     return response
 
-@importer_page.route('/importer/dms/<import_id>')
+@importer_page.route('/importer/dms/<import_id>', methods=['GET'])
 def importer_dms(import_id):
     props = {
         'currentPage': 'import',
@@ -75,6 +75,26 @@ def importer_dms(import_id):
     response = make_response(render_template(
         'importer_dms.html',
         props = props,
+    ), 200)
+
+    response.headers['Cache-Control'] = 'max-age=0, private, must-revalidate'
+    return response
+
+@importer_page.route('/importer/dms/<import_id>', methods=['POST'])
+def approve_importer_dms(import_id):
+    props = {
+        'currentPage': 'import',
+        'redirect': f'/importer/status/{import_id}'
+    }
+
+    approved_ids = request.form.getlist('approved_ids')
+    for dm_id in approved_ids:
+        approve_dm(import_id, dm_id)
+    cleanup_unapproved_dms(import_id)
+
+    response = make_response(render_template(
+        'success.html',
+        props = props
     ), 200)
 
     response.headers['Cache-Control'] = 'max-age=0, private, must-revalidate'

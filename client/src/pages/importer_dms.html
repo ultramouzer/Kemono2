@@ -12,12 +12,14 @@
   <form
     id="dm-approval"
     class="dms" 
+    method="POST"
   >
     {% for dm in props.dms %}
       <div>
         <input 
           type="checkbox" 
-          name="{{ dm.id }}" 
+          name="approved_ids"
+          value="{{ dm.id }}"
           id="{{ dm.id }}"
         >
           {{ direct_message(dm) }}

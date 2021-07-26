@@ -9,6 +9,7 @@ from ..lib.artist import get_all_non_discord_artists, get_artist, get_artist_pos
 from ..lib.post import get_artist_posts, get_all_posts_by_artist, is_post_flagged, get_render_data_for_posts
 from ..lib.favorites import is_artist_favorited
 from ..lib.account import load_account
+from ..lib.dms import get_artist_dms
 
 artists = Blueprint('artists', __name__)
 
@@ -125,6 +126,44 @@ def get(service, artist_id):
         result_flagged = result_flagged,
         result_after_kitsune = result_after_kitsune,
         result_is_image = result_is_image
+    ), 200)
+    response.headers['Cache-Control'] = 's-maxage=60'
+    return response
+
+@artists.route('/<service>/user/<artist_id>/dms')
+def get_dms(service, artist_id):
+    cursor = get_cursor()
+    props = {
+        'currentPage': 'posts',
+        'id': artist_id,
+        'service': service,
+        'session': session
+    }
+
+    # pagination might be added at some point if we need it, but considering how few dms most artists end up having, we probably won't
+    # base = request.args.to_dict()
+    # base.pop('o', None)
+    # base["service"] = service
+    # base["artist_id"] = artist_id
+
+    # offset = int(request.args.get('o') or 0)
+    # query = request.args.get('q')
+    # limit = limit_int(int(request.args.get('limit') or 25), 50)
+
+    artist = get_artist(service, artist_id)
+    if artist is None:
+        return redirect(url_for('artists.list'))
+
+    dms = get_artist_dms(service, artist_id)
+
+    props['name'] = artist['name']
+    props['artist'] = artist
+    props['display_data'] = make_artist_display_data(artist)
+    
+    response = make_response(render_template(
+        'user.html',
+        props = props,
+        results = dms
     ), 200)
     response.headers['Cache-Control'] = 's-maxage=60'
     return response
