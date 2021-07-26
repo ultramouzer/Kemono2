@@ -6,12 +6,20 @@
 
 {% block content %}
 <section class="site-section site-section--importer-status">
+  <header class="site-section__header">
+    <h1 class="site-section__heading">Importer logs</h1>
+  </header>
   <div class="info">
-    <div id="dm-reminder">
-    </div>
-    <p>
-      <strong>Importer logs</strong>
-    </p>
+    {% if props.dms %}
+      <div id="dm-reminder">
+        <div class="jumbo no-posts">
+          <strong>Hey!</strong>
+          <p>
+            You gave the importer permission to access your messages. To protect your anonymity, you must manually approve each one. Wait until <i>after</i> the importer says <code>Done importing DMs</code>, then go <a href="/importer/dms/{{ props.id }}">here</a> to choose which ones you wish to import.
+          </p>
+        </div>
+      </div>
+    {% endif %}
     <div class="logs" id="logs">
     </div>
   </div>
@@ -19,10 +27,4 @@
 {% endblock content %}
 
 {% block components %}
-  <div class="jumbo no-posts">
-    <strong>Hey!</strong>
-    <p>
-      You gave the importer permission to access your messages. To protect your anonymity, you must manually approve each one. Wait until <i>after</i> the importer says <code>Done importing DMs</code>, then go <a href="/importer/dms/{{ props.id }}">here</a> to choose which ones you wish to import.
-    </p>
-  </div>
 {% endblock components %}

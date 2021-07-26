@@ -1,4 +1,4 @@
-import { createComponent } from "@wp/components";
+// import { createComponent } from "@wp/components";
 
 /**
  * @param {HTMLElement} section 
@@ -9,15 +9,7 @@ export async function importerStatusPage(section) {
    */
   const importID = document.head.querySelector("meta[name='import_id']").content;
   var logs = [];
-  var dmsImported = page_data.dms;
 
-  if (dmsImported) {
-    /**
-     * @type {HTMLDivElement}
-     */
-    const jumboNoposts = createComponent("jumbo no-posts");
-    document.getElementById('dm-reminder').appendChild(jumboNoposts);
-  }
   await fetchAndShowLogs();
 
   async function fetchAndShowLogs() {

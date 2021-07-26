@@ -47,15 +47,12 @@ def importer_ok():
 
 @importer_page.route('/importer/status/<import_id>')
 def importer_status(import_id):
+    dms = request.args.get('dms')
     props = {
         'currentPage': 'import',
+        'import_id': import_id,
+        'dms': dms if dms else None
     }
-    
-    if request.args.get('dms'):
-        g.page_data['dms'] = request.args.get('dms')
-        props['dms'] = request.args.get('dms')
-
-    props['import_id'] = import_id
 
     response = make_response(render_template(
         'importer_status.html',

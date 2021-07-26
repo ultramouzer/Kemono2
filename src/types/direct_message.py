@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Optional
 
 @dataclass()
 class Direct_Message:
@@ -14,10 +15,4 @@ class Direct_Message:
     published: datetime
     embed: dict
     file: dict
-
-@dataclass()
-class Direct_Message_Unapproved(Direct_Message):
-    """
-    Unapproved DM item.
-    """
-    import_id: str
+    import_id: Optional[str]
