@@ -179,7 +179,7 @@
             </footer>
           </article>
         {% else %}
-          {% if post.service != 'patreon' %}
+          {% if post.service != 'patreon' and post.service != 'fanbox' %}
             <p class="subtitle">{{ paysite.title }} does not support comment scraping yet.</p>
           {% else %}
             <p class="subtitle">No comments found for this post.</p>
