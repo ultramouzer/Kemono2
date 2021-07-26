@@ -1,6 +1,6 @@
 {% extends 'components/shell.html' %}
 
-{% from 'components/timestamp.html' import timestamp %}
+{% from 'components/cards.html' import dm_card %}
 
 {% block content %}
 <section 
@@ -22,7 +22,7 @@
           value="{{ dm.id }}"
           id="{{ dm.id }}"
         >
-          {{ direct_message(dm) }}
+          {{ dm_card(dm) }}
         <label for="{{ dm.id }}">#{{ dm.id }}</label>
       </div>
     {% else %}
@@ -41,37 +41,3 @@
   </form>
 </section>
 {% endblock %}
-
-{% macro direct_message(dm) %}
-  <article 
-    class="direct-message" 
-    data-id="{{ dm.id }}"
-  >
-    <header class="direct-message__header">
-      <span>{{ dm.user }}</span> <span>({{ dm.service }})</span>
-    </header>
-    <section class="direct-message__body">
-      <div>
-        {{ dm.content | safe }}
-      </div>
-      {% if dm.file %}
-        <div>
-          {{ dm.file }}
-        </div>
-      {% endif %}
-      {% if dm.embed %}
-        <div>
-          {{ dm.embed }}
-        </div>
-      {% endif %}
-    </section>
-    <footer class="direct-message__footer">
-      <div>
-        {{ timestamp(dm.published) }}
-      </div>
-      <div>
-        {{ timestamp(dm.added) }}
-      </div>
-    </footer>
-  </article>
-{% endmacro %}

@@ -3,7 +3,7 @@ from datetime import datetime
 from typing import Optional
 
 @dataclass()
-class Direct_Message:
+class Kemono_DM:
     """
     DM item.
     """

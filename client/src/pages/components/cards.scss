@@ -139,3 +139,28 @@
     padding-top: 0.5em;
   }
 }
+
+// .user-card {}
+
+.dm-card {
+
+  &__header {}
+
+  &__user {}
+
+  &__service {}
+
+  &__body {}
+
+  &__content {}
+
+  &__files {}
+
+  &__embeds {}
+
+  &__footer {}
+
+  &__published {}
+
+  &__added {}
+}

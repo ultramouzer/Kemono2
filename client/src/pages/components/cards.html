@@ -65,3 +65,37 @@
 
 {% macro user_card() %}
 {% endmacro %}
+
+{% macro dm_card(dm) %}
+  <article 
+    class="dm-card" 
+    data-id="{{ dm.id }}"
+  >
+    <header class="dm-card__header">
+      <span class="dm-card__user">{{ dm.user }}</span> <span class="dm-card__service">({{ dm.service }})</span>
+    </header>
+    <section class="dm-card__body">
+      <div class="dm-card__content">
+        {{ dm.content | safe }}
+      </div>
+      {% if dm.file %}
+        <div class="dm-card__files">
+          {{ dm.file }}
+        </div>
+      {% endif %}
+      {% if dm.embed %}
+        <div class="dm-card__embeds">
+          {{ dm.embed }}
+        </div>
+      {% endif %}
+    </section>
+    <footer class="dm-card__footer">
+      <div class="dm-card__published">
+        {{ timestamp(dm.published) }}
+      </div>
+      <div class="dm-card__added">
+        {{ timestamp(dm.added) }}
+      </div>
+    </footer>
+  </article>
+{% endmacro %}

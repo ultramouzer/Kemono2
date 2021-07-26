@@ -154,16 +154,13 @@ def get_dms(service, artist_id):
     if artist is None:
         return redirect(url_for('artists.list'))
 
-    dms = get_artist_dms(service, artist_id)
-
-    props['name'] = artist['name']
     props['artist'] = artist
     props['display_data'] = make_artist_display_data(artist)
-    
+    props['dms'] = get_artist_dms(service, artist_id)
+
     response = make_response(render_template(
         'user.html',
         props = props,
-        results = dms
     ), 200)
     response.headers['Cache-Control'] = 's-maxage=60'
     return response
