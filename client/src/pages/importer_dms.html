@@ -7,7 +7,9 @@
   class="site-section site-section--importer-dms"
 >
   <header class="site-section__header">
-    <h1 class="site-section__heading">DM Review for {{ props.import_id }}</h1>
+    <h1 class="site-section__heading">
+      DM Review for {{ props.import_id }}
+    </h1>
   </header>
   {% if props.dms %}
     <form
@@ -16,15 +18,20 @@
       method="POST"
     >
       {% for dm in props.dms %}
-        <div>
+        <div class="form__section dms__dm">
           <input 
+            id="{{ dm.id }}"
+            class="dms__check"
             type="checkbox" 
             name="approved_ids"
             value="{{ dm.id }}"
-            id="{{ dm.id }}"
           >
-            {{ dm_card(dm) }}
-          <label for="{{ dm.id }}">Approve</label>
+          <div class="dms__content">
+            {{ dm_card(dm, 'dms__card') }}
+            <label class="dms__approve" for="{{ dm.id }}">
+              Approve
+            </label>
+          </div>
         </div>
       {% endfor %}
 

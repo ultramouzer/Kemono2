@@ -17,7 +17,7 @@ export async function importerStatusPage(section) {
   let logs = [];
   let service;
 
-  await fetchAndShowLogs(logs);
+  // await fetchAndShowLogs(logs);
 
   /**
    * @param {KemonoAPI.API.LogItem[]} logs 

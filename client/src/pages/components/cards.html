@@ -63,22 +63,31 @@
   </article>      
 {% endmacro %}
 
-{% macro user_card() %}
+{% macro user_card(user, class_name=none) %}
 {% endmacro %}
 
-{% macro dm_card(dm) %}
+{% macro dm_card(dm, class_name=none) %}
+  {% set service = g.paysites[dm.service] %}
+  {% set artist_link = service.user.profile(dm.user) %}
   <article 
-    class="dm-card" 
+    class="dm-card {{ class_name if class_name }}" 
     data-id="{{ dm.id }}"
   >
     <header class="dm-card__header">
-      <span class="dm-card__user">{{ dm.user }}</span> <span class="dm-card__service">({{ dm.service }})</span>
+    {% call fancy_link(
+      url=artist_link,
+      class_name='dms__user-link'
+    ) %}
+      <span class="dm-card__user">Artist</span> <span class="dm-card__service">({{ service.title }})</span>
+    {% endcall %}
+      
     </header>
     <section class="dm-card__body">
       <div class="dm-card__content">
-        {{ dm.content | safe }}
+        {{ dm.content|safe }}
       </div>
-      {% if dm.file %}
+      {# These values are not used for now. #}
+      {# {% if dm.file %}
         <div class="dm-card__files">
           {{ dm.file }}
         </div>
@@ -87,14 +96,16 @@
         <div class="dm-card__embeds">
           {{ dm.embed }}
         </div>
-      {% endif %}
+      {% endif %} #}
     </section>
     <footer class="dm-card__footer">
-      <div class="dm-card__published">
-        {{ timestamp(dm.published) }}
-      </div>
+      {# {% if dm.published %}
+        <div class="dm-card__published">
+          Published: {{ timestamp(dm.published) }}
+        </div>
+      {% endif %} #}
       <div class="dm-card__added">
-        {{ timestamp(dm.added) }}
+        Added: {{ timestamp(dm.added) }}
       </div>
     </footer>
   </article>

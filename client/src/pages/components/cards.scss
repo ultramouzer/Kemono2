@@ -144,6 +144,10 @@
 
 .dm-card {
 
+  & > * {
+    padding: $size-small;
+  }
+
   &__header {}
 
   &__user {}
@@ -152,7 +156,9 @@
 
   &__body {}
 
-  &__content {}
+  &__content {
+    line-height: 1.5;
+  }
 
   &__files {}
 

@@ -20,7 +20,7 @@ def get_unapproved_dms(import_id: str, reload: bool = False):
         dms = deserialize_dms(dms)
     return dms
 
-def get_artist_dms(service, artist_id, reload: bool = False):
+def get_artist_dms(service: str, artist_id: str, reload: bool = False):
     redis = get_conn()
     key = 'dms:' + service + ':' + str(artist_id)
     dms = redis.get(key)
@@ -41,7 +41,7 @@ def cleanup_unapproved_dms(import_id: str):
 
     return True
 
-def approve_dm(import_id, dm_id):
+def approve_dm(import_id: str, dm_id: str):
     cursor = get_cursor()
     query = 'INSERT INTO dms (id, "user", service, content, embed, added, published, file) SELECT id, "user", service, content, embed, added, published, file FROM unapproved_dms WHERE import_id = %s AND id = %s; '
     query += 'DELETE FROM unapproved_dms WHERE import_id = %s AND id = %s;'
