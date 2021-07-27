@@ -41,6 +41,7 @@ body {
 main {}
 
 h1 {
+  text-transform: capitalize;
   font-size: 1.7rem;
   font-weight: normal;
   margin: 0;
@@ -132,15 +133,6 @@ label {
   cursor: pointer;
 }
 
-button {
-  cursor: pointer;
-
-  // prevents onclick events from firind on children
-  & > * {
-    pointer-events: none;
-  }
-}
-
 textarea {
   width: calc(100% - 2px);
   -webkit-box-sizing: border-box;
@@ -163,6 +155,7 @@ select {
   border-radius: 5px;
   border-color: #111;
   text-align-last: center;
+  cursor: pointer;
 }
 
 select * {
@@ -171,4 +164,13 @@ select * {
 
 select::-ms-expand {
   color: #000;
+}
+
+button {
+  cursor: pointer;
+
+  // prevents onclick events from firind on children
+  & > * {
+    pointer-events: none;
+  }
 }

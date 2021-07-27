@@ -66,6 +66,7 @@ def importer_status(import_id):
 def importer_dms(import_id):
     props = {
         'currentPage': 'import',
+        'import_id': import_id,
         'dms': get_unapproved_dms(import_id)
     }
 

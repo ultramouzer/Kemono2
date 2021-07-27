@@ -7,17 +7,17 @@
 {% block content %}
 <section class="site-section site-section--importer-status">
   <header class="site-section__header">
-    <h1 class="site-section__heading">Importer logs</h1>
+    <h1 class="site-section__heading">Importer logs for {{ props.import_id }}</h1>
   </header>
   {% if props.dms %}
     <div class="jumbo no-posts">
       <strong>Hey!</strong>
       <p>
-        You gave the importer permission to access your messages. To protect your anonymity, you must manually approve each one. Wait until <i>after</i> the importer says <code>Done importing DMs</code>, then go <a href="/importer/dms/{{ props.id }}">here</a> to choose which ones you wish to import.
+        You gave the importer permission to access your messages. To protect your anonymity, you must manually approve each one. Wait until <i>after</i> the importer says <code>Done importing DMs</code>, then go <a href="/importer/dms/{{ props.import_id }}">here</a> to choose which ones you wish to import.
       </p>
     </div>
   {% endif %}
-  <ul id="logs" class="log-list">
+  <ul id="log-list" class="log-list">
   </ul>
 </section>
 {% endblock content %}

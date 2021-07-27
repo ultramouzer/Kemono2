@@ -13,12 +13,9 @@ export async function importerStatusPage(section) {
    * @type {HTMLUListElement}
    */
   const logList = section.querySelector(".log-list");
-  const logs = await kemonoAPI.api.logs(importID);
   let cooldown = 5000;
-
-  if (!logs) {
-    logs.push(`Error fetching logs. We'll keep trying. Your log id is ${ImportID}.`);
-  }
+  let logs = [];
+  let service;
 
   await fetchAndShowLogs(logs);
 
@@ -27,13 +24,22 @@ export async function importerStatusPage(section) {
    */
   async function fetchAndShowLogs(logs) {
     logs = await fetchNewLogs(importID, logs);
+    
+    // if (newLogs.length === logs.length) {
+    //   cooldown = cooldown * 2;
+    //   setTimeout(async () => {
+    //     await fetchAndShowLogs(logs);
+    //   }, cooldown);
+    //   return;
+    // }
+
     let currentChildCount = logList.childElementCount;
     let lastChild = logList.lastChild;
     let shouldScrollToBottom = true;
     let newLastChild;
 
     if (lastChild) {
-        shouldScrollToBottom = isScrolledIntoView(logList.lastChild);
+      shouldScrollToBottom = isScrolledIntoView(logList.lastChild);
     }
 
     logs.forEach((message, index) => {
@@ -43,13 +49,14 @@ export async function importerStatusPage(section) {
       logList.appendChild(logItem);
       newLastChild = logItem;
     });
+    
 
     if (newLastChild && shouldScrollToBottom) {
-        newLastChild.scrollIntoView();
+      newLastChild.scrollIntoView();
     }
 
     setTimeout(async () => {
-      await fetchAndShowLogs();
+      await fetchAndShowLogs(logs);
     }, cooldown);
   }
 }
@@ -69,10 +76,16 @@ async function fetchNewLogs(importID, logs) {
   }
 }
 
-function isScrolledIntoView(el) {
-    var parent = document.getElementsByClassName('info')[0];
-    var height = parent.scrollTop;
-    return el.offsetTop >= height && (el.offsetTop <= height + parent.offsetHeight + 10 + el.offsetHeight)
+/**
+ * @param {HTMLElement} element 
+ */
+function isScrolledIntoView(element) {
+  /**
+   * @type {HTMLUListElement}
+   */
+  const parent = document.getElementById("log-list");
+  const height = parent.scrollTop;
+  return element.offsetTop >= height && (element.offsetTop <= height + parent.offsetHeight + 10 + element.offsetHeight)
 }
 
 /**

@@ -7,37 +7,40 @@
   class="site-section site-section--importer-dms"
 >
   <header class="site-section__header">
-    <h1 class="site-section__heading">DM review</h1>
+    <h1 class="site-section__heading">DM Review for {{ props.import_id }}</h1>
   </header>
-  <form
-    id="dm-approval"
-    class="dms" 
-    method="POST"
-  >
-    {% for dm in props.dms %}
-      <div>
-        <input 
-          type="checkbox" 
-          name="approved_ids"
-          value="{{ dm.id }}"
-          id="{{ dm.id }}"
+  {% if props.dms %}
+    <form
+      id="dm-approval"
+      class="form form--bigger dms" 
+      method="POST"
+    >
+      {% for dm in props.dms %}
+        <div>
+          <input 
+            type="checkbox" 
+            name="approved_ids"
+            value="{{ dm.id }}"
+            id="{{ dm.id }}"
+          >
+            {{ dm_card(dm) }}
+          <label for="{{ dm.id }}">Approve</label>
+        </div>
+      {% endfor %}
+
+      <div class="form__section">
+        <button 
+          type="submit" 
+          class="form__button form__button--submit"
         >
-          {{ dm_card(dm) }}
-        <label for="{{ dm.id }}">#{{ dm.id }}</label>
+          Submit approved DMs.
+        </button>
       </div>
-    {% else %}
-      <p>
-        There are no DMs waiting for approval.
-      </p>
-    {% endfor %}
-    <div class="form__section">
-      <button 
-        type="submit" 
-        class="form__button form__button--submit"
-      >
-        Submit checked DMs for approval.
-      </button>
-    </div>
-  </form>
+    </form>
+  {% else %}
+    <p class="no-dms">
+      There are no DMs waiting for approval.
+    </p>
+  {% endif %}
 </section>
 {% endblock %}
