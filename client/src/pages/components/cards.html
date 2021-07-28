@@ -78,7 +78,7 @@
       url=artist_link,
       class_name='dms__user-link'
     ) %}
-      <span class="dm-card__user">Artist</span> <span class="dm-card__service">({{ service.title }})</span>
+      <span class="dm-card__user">{{ dm.user }}</span> <span class="dm-card__service">({{ service.title }})</span>
     {% endcall %}
       
     </header>
@@ -99,11 +99,11 @@
       {% endif %} #}
     </section>
     <footer class="dm-card__footer">
-      {# {% if dm.published %}
+      {% if dm.published %}
         <div class="dm-card__published">
           Published: {{ timestamp(dm.published) }}
         </div>
-      {% endif %} #}
+      {% endif %}
       <div class="dm-card__added">
         Added: {{ timestamp(dm.added) }}
       </div>

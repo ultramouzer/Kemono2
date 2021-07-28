@@ -1,12 +1,13 @@
-from dataclasses import dataclass
 from datetime import datetime
 from typing import Optional
 
 class __File:
-    """"""
+    def __init__(self) -> None:
+        pass
 
 class __Embed:
-    """"""
+    def __init__(self) -> None:
+        pass
 
 class __Paysites:
     def __init__(self) -> None:

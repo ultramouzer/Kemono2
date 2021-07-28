@@ -10,6 +10,7 @@ from ..lib.post import get_artist_posts, get_all_posts_by_artist, is_post_flagge
 from ..lib.favorites import is_artist_favorited
 from ..lib.account import load_account
 from ..lib.dms import get_artist_dms
+# from .artists_types import ArtistPageProps
 
 artists = Blueprint('artists', __name__)
 
@@ -116,6 +117,8 @@ def get(service, artist_id):
 
     (result_previews, result_attachments, result_flagged, result_after_kitsune, result_is_image) = get_render_data_for_posts(posts)
     
+    
+
     response = make_response(render_template(
         'user.html',
         props = props,
@@ -133,12 +136,6 @@ def get(service, artist_id):
 @artists.route('/<service>/user/<artist_id>/dms')
 def get_dms(service, artist_id):
     cursor = get_cursor()
-    props = {
-        'currentPage': 'posts',
-        'id': artist_id,
-        'service': service,
-        'session': session
-    }
 
     # pagination might be added at some point if we need it, but considering how few dms most artists end up having, we probably won't
     # base = request.args.to_dict()
@@ -154,9 +151,17 @@ def get_dms(service, artist_id):
     if artist is None:
         return redirect(url_for('artists.list'))
 
-    props['artist'] = artist
-    props['display_data'] = make_artist_display_data(artist)
-    props['dms'] = get_artist_dms(service, artist_id)
+    dms = get_artist_dms(service, artist_id)
+
+    props = {
+        'currentPage': 'posts',
+        'id': artist_id,
+        'service': service,
+        'session': session,
+        'artist': artist,
+        'display_data': make_artist_display_data(artist),
+        'dms': dms
+    }
 
     response = make_response(render_template(
         'user.html',

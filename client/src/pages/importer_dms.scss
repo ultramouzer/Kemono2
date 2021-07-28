@@ -18,11 +18,13 @@
 
       &:checked + .dms__content {
         --local-border-colour1: var(--positive-colour1-secondary);
+        --local-opacity: 1;
       }
     }
 
     &__content {
       --local-border-colour1: var(--colour1-secondary);
+      --local-opacity: 0.5;
 
       border-radius: 10px 10px 0 10px;
       border: $size-thin solid var(--local-border-colour1);
@@ -51,13 +53,14 @@
       position: absolute;
       right: 0;
       top: 100%;
-      background-color: var(--colour1-secondary);
+      background-color: var(--local-border-colour1);
+      opacity: var(--local-opacity);
       border-radius: 0 0 5px 5px;
       border: $size-thin solid var(--local-border-colour1);
       border-top: none;
       padding: $size-small;
       transition-duration: var(--duration-global);
-      transition-property: border-color;
+      transition-property: color, opacity;
     }
   }
 

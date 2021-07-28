@@ -1,12 +1,14 @@
+from typing import List
 from ..internals.cache.redis import get_conn
 from ..internals.database.database import get_cursor
 from ..utils.utils import get_value
+from ..types.kemono import kemono_types
 import ujson
 import dateutil
 import copy
 import datetime
 
-def get_unapproved_dms(import_id: str, reload: bool = False):
+def get_unapproved_dms(import_id: str, reload: bool = False) -> List[kemono_types.DM]:
     redis = get_conn()
     key = 'unapproved_dms:' + import_id
     dms = redis.get(key)
@@ -18,6 +20,19 @@ def get_unapproved_dms(import_id: str, reload: bool = False):
         redis.set(key, serialize_dms(dms), ex = 1)
     else:
         dms = deserialize_dms(dms)
+    
+    for dm in dms:
+        dm = kemono_types.DM(
+            id=dm["id"],
+            user=dm["user"],
+            service=dm["service"],
+            content=dm["content"],
+            added=dm["added"],
+            published=dm["published"],
+            embed=dm["embed"],
+            file=dm["file"],
+            import_id=dm["import_id"]
+        )
     return dms
 
 def get_artist_dms(service: str, artist_id: str, reload: bool = False):

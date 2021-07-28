@@ -64,13 +64,8 @@
           rel="noreferrer"
           href="{{ props.display_data.href }}"
           itemprop="url" 
-        > 
-          <span class="user-header__profile-image">
-            <img 
-            src="{{ paysite_icons[props.service] }}" 
-          >
-          </span>
-          <span itemprop="name">{{ props.name }}</span>
+        >
+          <span itemprop="name">{{ props.name }}</span> <span>({{ paysite.title }})</span>
         </a>
       </h1>
       

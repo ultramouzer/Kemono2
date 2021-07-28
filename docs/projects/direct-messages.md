@@ -32,8 +32,8 @@ The user:
 4. Gets responded with `success.html` template with a redirect to import status page.
 5. The status page then checks for `dms` search query to inform about unapproved DMs and gives a link to `/importer/dms/<import_id>`.
 6. This page shows a list of DMs which need approval.
-7. Presumably the IDs of approved DMs are sent to the approval endpoint and then the succesfull IDs are sent back.
-8. Probably a separate page/tab/list for DMs on artist page.
+7. The IDs of approved DMs are sent to the `POST` `/importer/dms/<import_id>`, the rest are discarded.
+8. Approved DMs then appear at `GET` `/<service>/user/<artist_id>/dms`.
 
 ## Issues
 - No safety checks.
@@ -55,3 +55,7 @@ The user:
 - Unapproved DMs piling up.
 
   There is probably going to be at least 1 unapproved DM per importer, which means an evergrowing number of unapproved DM entries piling up in database. An explicit "reject" action for DMs, which removes the DM from database and adds its ID to some account-bound list of exclusions will alleviate this issue, on top of not showing them again in the approval list for the importing user.
+
+- Unapproved DMs getting reimported
+
+  This makes them reappear in the DM approval list and the server throws an error upon approval of previously discarded DMs, thus piling up them in DM approval page too.

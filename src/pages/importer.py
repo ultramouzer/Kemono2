@@ -3,6 +3,7 @@ from flask import Blueprint, request, make_response, render_template, current_ap
 import requests
 from os import getenv
 from ..lib.dms import get_unapproved_dms, approve_dm, cleanup_unapproved_dms
+from .importer_types import DMPageProps, StatusPageProps
 
 importer_page = Blueprint('importer_page', __name__)
 
@@ -48,12 +49,12 @@ def importer_ok():
 @importer_page.route('/importer/status/<import_id>')
 def importer_status(import_id):
     dms = request.args.get('dms')
-    props = {
-        'currentPage': 'import',
-        'import_id': import_id,
-        'dms': dms if dms else None
-    }
 
+    props = StatusPageProps(
+        current_page='import',
+        import_id=import_id,
+        dms=dms
+    )
     response = make_response(render_template(
         'importer_status.html',
         props = props
@@ -64,11 +65,13 @@ def importer_status(import_id):
 
 @importer_page.route('/importer/dms/<import_id>', methods=['GET'])
 def importer_dms(import_id):
-    props = {
-        'currentPage': 'import',
-        'import_id': import_id,
-        'dms': get_unapproved_dms(import_id)
-    }
+    dms = get_unapproved_dms(import_id)
+
+    props = DMPageProps(
+        current_page= 'import',
+        import_id= import_id,
+        dms= dms
+    )
 
     response = make_response(render_template(
         'importer_dms.html',
