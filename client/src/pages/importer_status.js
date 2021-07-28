@@ -89,7 +89,7 @@ async function updateLogList(logs, logList, stats) {
   if (diff === 0) {
     stats.cooldown = stats.cooldown * 2;
     await waitAsync(stats.cooldown);
-    return await updateLogList(logs, logList, stats.importID);
+    return await updateLogList(logs, logList, stats);
   }
 
   const diffLogs = newLogs.slice(newLogs.length - diff);
@@ -103,7 +103,7 @@ async function updateLogList(logs, logList, stats) {
   stats.count.textContent = logs.length;
 
   await waitAsync(stats.cooldown);
-  return await updateLogList(logs, logList, stats.importID);
+  return await updateLogList(logs, logList, stats);
 }
 
 /**
