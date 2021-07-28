@@ -77,13 +77,7 @@ def updated():
 @artists.route('/<service>/user/<artist_id>')
 def get(service, artist_id):
     cursor = get_cursor()
-    props = {
-        'currentPage': 'posts',
-        'id': artist_id,
-        'service': service,
-        'session': session
-    }
-
+    
     base = request.args.to_dict()
     base.pop('o', None)
     base["service"] = service
@@ -108,16 +102,22 @@ def get(service, artist_id):
     if artist is None:
         return redirect(url_for('artists.list'))
 
-    props['name'] = artist['name']
-    props['count'] = total_count
-    props['limit'] = limit
-    props['favorited'] = favorited
-    props['artist'] = artist
-    props['display_data'] = make_artist_display_data(artist)
+    display_data = make_artist_display_data(artist)
 
     (result_previews, result_attachments, result_flagged, result_after_kitsune, result_is_image) = get_render_data_for_posts(posts)
     
-    
+    props = {
+        'current_page': 'posts',
+        'id': artist_id,
+        'service': service,
+        'session': session,
+        'name': artist['name'],
+        'count': total_count,
+        'limit': limit,
+        'favorited': favorited,
+        'artist': artist,
+        'display_data': display_data
+    }
 
     response = make_response(render_template(
         'user.html',
@@ -154,7 +154,7 @@ def get_dms(service, artist_id):
     dms = get_artist_dms(service, artist_id)
 
     props = {
-        'currentPage': 'posts',
+        'current_page': 'dms',
         'id': artist_id,
         'service': service,
         'session': session,
