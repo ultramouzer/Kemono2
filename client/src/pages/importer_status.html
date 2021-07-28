@@ -1,5 +1,7 @@
 {% extends 'components/shell.html' %}
 
+{% from 'components/loading_icon.html' import loading_icon %}
+
 {% block meta %}
   <meta name="import_id" content="{{ props.import_id }}">
 {% endblock meta %}
@@ -17,8 +19,21 @@
       </p>
     </div>
   {% endif %}
-  <ul id="log-list" class="log-list">
-  </ul>
+  <div class="import">
+    <div class="import__stats">
+      <div class="import__status">
+        Status: <span>Fetching</span>
+      </div>
+      <div class="import__count import__count--invisible">
+        Total: <span></span>
+      </div>
+    </div>
+    <p class="loading-placeholder">
+    {{ loading_icon() }} <span>Wait until logs load...</span>
+    </p>
+    <ul id="log-list" class="log-list">
+    </ul>
+  </div>
 </section>
 {% endblock content %}
   

@@ -66,28 +66,31 @@
           href="{{ props.display_data.href }}"
           itemprop="url" 
         >
-          <span itemprop="name">{{ props.name }}</span> <span>({{ paysite.title }})</span>
+          <span class="user-header__profile-image">
+            <img 
+            src="{{ paysite_icons[props.service] }}" 
+          >
+          </span>
+          <span itemprop="name">{{ props.name }}</span>
         </a>
       </h1>
-      {% if props.current_page == 'dms' %}
-        <div class="user-header__posts">
+      
+      <div class="user-header__actions">
+        {% if props.current_page == 'dms' %}
           {{ fancy_link(
             url= g.freesites.kemono.user.profile(props.service, props.id),
-            text= "Posts",
-            is_noop= false
+            text= 'Posts',
+            is_noop= false,
+            class_name= 'user-header__posts'
           ) }}
-        </div>
-      {% elif props.current_page == 'posts' %}
-        <div class="user-header__dms">
+        {% elif props.current_page == 'posts' %}
           {{ fancy_link(
             url= request.path ~ "/dms",
             text= "DMs",
-            is_noop= false
+            is_noop= false,
+            class_name= 'user-header__dms'
           ) }}
-        </div>
-      {% endif %}
-      
-      <div class="user-header__actions">
+        {% endif %}
         <a
           class="user-header__upload"
           href="/posts/upload?service={{ props.service }}&user={{ props.id }}"

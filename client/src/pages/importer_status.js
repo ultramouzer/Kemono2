@@ -1,91 +1,109 @@
 import { kemonoAPI } from "@wp/api";
 import { createComponent } from "@wp/components";
+import { waitAsync } from "@wp/utils";
 
 /**
+ * @typedef Stats
+ * @property {string} importID
+ * @property {HTMLSpanElement} status
+ * @property {HTMLSpanElement} count
+ * @property {number} cooldown
+ */
+
+
+
+/**
+ * TODOs: 
+ * - service heuristics
+ * - error handling
  * @param {HTMLElement} section 
  */
 export async function importerStatusPage(section) {
   /**
-   * @type {string}
+   * @type {HTMLDivElement}
    */
-  const importID = document.head.querySelector("meta[name='import_id']").content;
+  const importStats = section.querySelector(".import__stats");
+  const [status, count] = importStats.children;
+  /**
+   * @type {Stats}
+   */
+   const stats = {
+    importID: document.head.querySelector("meta[name='import_id']").content,
+    status: status.children[0],
+    count: count.children[0],
+    cooldown: 5000
+  }
+  /**
+   * @type {HTMLParagraphElement}
+   */
+  const loadingPlaceholder = section.querySelector(".loading-placeholder");
   /**
    * @type {HTMLUListElement}
    */
   const logList = section.querySelector(".log-list");
-  let cooldown = 5000;
-  let logs = [];
-  let service;
 
-  // await fetchAndShowLogs(logs);
+  const logs = await kemonoAPI.api.logs(stats.importID);
 
-  /**
-   * @param {KemonoAPI.API.LogItem[]} logs 
-   */
-  async function fetchAndShowLogs(logs) {
-    logs = await fetchNewLogs(importID, logs);
-    
-    // if (newLogs.length === logs.length) {
-    //   cooldown = cooldown * 2;
-    //   setTimeout(async () => {
-    //     await fetchAndShowLogs(logs);
-    //   }, cooldown);
-    //   return;
-    // }
+  if (logs) {
+    populateLogList(logs, logList, loadingPlaceholder);
+    stats.status.textContent = "In Progress";
+    stats.count.textContent = logs.length;
+    count.classList.remove("import__count--invisible");
 
-    let currentChildCount = logList.childElementCount;
-    let lastChild = logList.lastChild;
-    let shouldScrollToBottom = true;
-    let newLastChild;
-
-    if (lastChild) {
-      shouldScrollToBottom = isScrolledIntoView(logList.lastChild);
-    }
-
-    logs.forEach((message, index) => {
-      if (index < currentChildCount) { return; }
-
-      const logItem = LogItem(message);
-      logList.appendChild(logItem);
-      newLastChild = logItem;
-    });
-    
-
-    if (newLastChild && shouldScrollToBottom) {
-      newLastChild.scrollIntoView();
-    }
-
-    setTimeout(async () => {
-      await fetchAndShowLogs(logs);
-    }, cooldown);
+    await waitAsync(stats.cooldown);
+    await updateLogList(logs, logList, stats);
+  } else {
+    loadingPlaceholder.classList.add("loading-placeholder--complete")
+    alert("Failed to fetch the logs, try to reload the page.")
   }
 }
 
 /**
- * @param {string} importID 
- * @param {KemonoAPI.API.LogItem[]} logs 
+ * @param {string[]} logs 
+ * @param {HTMLUListElement} logList 
+ * @param {HTMLParagraphElement} loadingItem
  */
-async function fetchNewLogs(importID, logs) {
-  try {
-    logs = await kemonoAPI.api.logs(importID);
+function populateLogList(logs, logList, loadingItem){
+  const fragment = document.createDocumentFragment();
 
-    return logs;
-  } catch (error) {
-    logs.push(`Error fetching logs. We'll keep trying. Your log id is ${importID}.`);
-    return logs;
-  }
+  logs.forEach((log) => {
+    const logItem = LogItem(log);
+    fragment.appendChild(logItem);
+  });
+
+  loadingItem.classList.add("loading-placeholder--complete")
+  logList.appendChild(fragment);
+  logList.classList.add("log-list--loaded");
 }
 
 /**
- * @param {HTMLElement} element 
+ * TODO: finishing condition.
+ * @param {string[]} logs 
+ * @param {HTMLUListElement} logList 
+ * @param {Stats} stats
  */
-function isScrolledIntoView(element) {
-  /**
-   * @type {HTMLUListElement}
-   */
-  const parent = document.getElementById("log-list");
-  const height = parent.scrollTop;
-  return element.offsetTop >= height && (element.offsetTop <= height + parent.offsetHeight + 10 + element.offsetHeight)
+async function updateLogList(logs, logList, stats) {
+  const newLogs = await kemonoAPI.api.logs(stats.importID);
+  const diff = newLogs.length - logs.length;
+
+  if (diff === 0) {
+    stats.cooldown = stats.cooldown * 2;
+    await waitAsync(stats.cooldown);
+    return await updateLogList(logs, logList, stats.importID);
+  }
+
+  const diffLogs = newLogs.slice(newLogs.length - diff);
+  const fragment = document.createDocumentFragment();
+  diffLogs.forEach((log) => {
+    const logItem = LogItem(log);
+    fragment.appendChild(logItem);
+  });
+  logs.push(diffLogs);
+  logList.appendChild(fragment);
+  stats.count.textContent = logs.length;
+
+  await waitAsync(stats.cooldown);
+  return await updateLogList(logs, logList, stats.importID);
 }
 
 /**
