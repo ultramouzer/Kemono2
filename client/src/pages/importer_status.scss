@@ -3,15 +3,38 @@
 .site-section--importer-status {
 
   .import {
+    &__info {
+      position: sticky;
+      top: 2em;
+      right: 2em;
+      float: right;
+      background-color: var(--colour1-primary-transparent);
+      border-radius: 10px;
+      padding: $size-normal;
+
+      & > * {
+        padding-bottom: $size-normal;
+
+        &:last-child {
+          padding-bottom: 0;
+        }
+      }
+    }
 
     &__stats {
-      position: sticky;
       display: flex;
       flex-flow: row nowrap;
       justify-content: flex-end;
       align-items: center;
       gap: $size-normal;
-      margin-left: auto;
+    }
+
+    &__buttons {
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: flex-end;
+      align-items: center;
+      gap: $size-normal;
     }
 
     &__status {}
@@ -49,12 +72,18 @@
   }
   
   .log-list {
-    list-style: none;
-    padding: 1em 0;
+    padding: 1em 0 1em 3em;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
     opacity: 0;
     visibility: hidden;
     transition-duration: var(--duration-global);
     transition-property: visibility, opacity;
+
+    &--reversed {
+      flex-direction: column-reverse;
+    }
 
     &--loaded {
       opacity: 1;

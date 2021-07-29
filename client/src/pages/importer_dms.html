@@ -27,7 +27,10 @@
             value="{{ dm.id }}"
           >
           <div class="dms__content">
-            {{ dm_card(dm, 'dms__card') }}
+            {{ dm_card(dm,
+              is_published=true, 
+              class_name='dms__card'
+            ) }}
             <label class="dms__approve" for="{{ dm.id }}">
               Approve
             </label>

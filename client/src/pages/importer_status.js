@@ -8,9 +8,8 @@ import { waitAsync } from "@wp/utils";
  * @property {HTMLSpanElement} status
  * @property {HTMLSpanElement} count
  * @property {number} cooldown
+ * @property {number} retries
  */
-
-
 
 /**
  * TODOs: 
@@ -22,26 +21,32 @@ export async function importerStatusPage(section) {
   /**
    * @type {HTMLDivElement}
    */
-  const importStats = section.querySelector(".import__stats");
+  const importInfo = section.querySelector(".import__info");
+  /**
+   * @type {[HTMLDivElement, HTMLDivElement]}
+   */
+  const [importStats, buttonPanel] = importInfo.children;
   const [status, count] = importStats.children;
   /**
    * @type {Stats}
    */
-   const stats = {
+  const stats = {
     importID: document.head.querySelector("meta[name='import_id']").content,
-    status: status.children[0],
-    count: count.children[0],
-    cooldown: 5000
+    status: status.children[1],
+    count: count.children[1],
+    cooldown: 5000,
+    retries: 0,
   }
   /**
    * @type {HTMLParagraphElement}
    */
   const loadingPlaceholder = section.querySelector(".loading-placeholder");
   /**
-   * @type {HTMLUListElement}
+   * @type {HTMLOListElement}
    */
   const logList = section.querySelector(".log-list");
-
+  
+  initButtons(buttonPanel, logList);
   const logs = await kemonoAPI.api.logs(stats.importID);
 
   if (logs) {
@@ -53,14 +58,37 @@ export async function importerStatusPage(section) {
     await waitAsync(stats.cooldown);
     await updateLogList(logs, logList, stats);
   } else {
-    loadingPlaceholder.classList.add("loading-placeholder--complete")
-    alert("Failed to fetch the logs, try to reload the page.")
+    loadingPlaceholder.classList.add("loading-placeholder--complete");
+    alert("Failed to fetch the logs, try reloading the page.");
+  }
+}
+
+/**
+ * @param {HTMLDivElement} buttonPanel
+ * @param {HTMLOListElement} logList
+ */
+function initButtons(buttonPanel, logList) {
+  /**
+   * @type {HTMLButtonElement[]}
+   */
+  const [reverseButton] = buttonPanel.children;
+
+  reverseButton.addEventListener("click", reverseList(logList));
+}
+
+/**
+ * @param {HTMLOListElement} logList 
+ * @returns {(event: MouseEvent) => void}
+ */
+function reverseList(logList) {
+  return (event) => {
+    logList.classList.toggle("log-list--reversed");
   }
 }
 
 /**
  * @param {string[]} logs 
- * @param {HTMLUListElement} logList 
+ * @param {HTMLOListElement} logList 
  * @param {HTMLParagraphElement} loadingItem
  */
 function populateLogList(logs, logList, loadingItem){
@@ -79,11 +107,24 @@ function populateLogList(logs, logList, loadingItem){
 /**
  * TODO: finishing condition.
  * @param {string[]} logs 
- * @param {HTMLUListElement} logList 
+ * @param {HTMLOListElement} logList 
  * @param {Stats} stats
  */
 async function updateLogList(logs, logList, stats) {
-  const newLogs = await kemonoAPI.api.logs(stats.importID);
+  let newLogs = await kemonoAPI.api.logs(stats.importID);
+
+  if (!newLogs) {
+
+    if (stats.retries === 5) {
+      stats.status.textContent = "Fatal Error";
+      return;
+    }
+
+    await waitAsync(stats.cooldown);
+    stats.retries++
+    return await updateLogList(logs, logList, stats);
+  }
+
   const diff = newLogs.length - logs.length;
 
   if (diff === 0) {
@@ -98,7 +139,7 @@ async function updateLogList(logs, logList, stats) {
     const logItem = LogItem(log);
     fragment.appendChild(logItem);
   });
-  logs.push(diffLogs);
+  logs.push(...diffLogs);
   logList.appendChild(fragment);
   stats.count.textContent = logs.length;
 

@@ -66,7 +66,11 @@
 {% macro user_card(user, class_name=none) %}
 {% endmacro %}
 
-{% macro dm_card(dm, class_name=none) %}
+{% macro dm_card(
+  dm, 
+  is_published=false, 
+  class_name=none
+) %}
   {% set service = g.paysites[dm.service] %}
   {% set artist_link = service.user.profile(dm.user) %}
   <article 
@@ -74,14 +78,14 @@
     data-id="{{ dm.id }}"
   >
     <header class="dm-card__header">
-    {% call fancy_link(
-      url=artist_link,
-      class_name='dms__user-link'
-    ) %}
-      <span class="dm-card__user">{{ dm.user }}</span> <span class="dm-card__service">({{ service.title }})</span>
-    {% endcall %}
-      
+      {% call fancy_link(
+        url=artist_link,
+        class_name='dms__user-link'
+      ) %}
+        <span class="dm-card__user">{{ dm.user }}</span> <span class="dm-card__service">({{ service.title }})</span>
+      {% endcall %}
     </header>
+
     <section class="dm-card__body">
       <div class="dm-card__content">
         {{ dm.content|safe }}
@@ -98,8 +102,9 @@
         </div>
       {% endif %} #}
     </section>
+
     <footer class="dm-card__footer">
-      {% if dm.published %}
+      {% if is_published %}
         <div class="dm-card__published">
           Published: {{ timestamp(dm.published) }}
         </div>
