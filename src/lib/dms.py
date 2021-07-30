@@ -31,7 +31,8 @@ def get_unapproved_dms(import_id: str, reload: bool = False) -> List[kemono_type
             published=dm["published"],
             embed=dm["embed"],
             file=dm["file"],
-            import_id=dm["import_id"]
+            import_id=dm["import_id"],
+            contributor_id=dm["contributor_id"]
         )
     return dms
 
