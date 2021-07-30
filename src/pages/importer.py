@@ -1,4 +1,4 @@
-from flask import Blueprint, request, make_response, render_template, current_app, g
+from flask import Blueprint, request, make_response, render_template, current_app, g, session
 
 import requests
 from os import getenv
@@ -121,6 +121,9 @@ def importer_submit():
     host = getenv('ARCHIVERHOST')
     port = getenv('ARCHIVERPORT') if getenv('ARCHIVERPORT') else '8000'
 
+    if not session.get('account_id') and request.form.get("save_dms"):
+        return 'You must be logged in to import direct messages.', 401
+    
     try:
         r = requests.post(
             f'http://{host}:{port}/api/import',
@@ -129,7 +132,8 @@ def importer_submit():
                 'session_key': request.form.get("session_key"),
                 'channel_ids': request.form.get("channel_ids"),
                 'save_session_key': request.form.get("save_session_key"),
-                'save_dms': request.form.get("save_dms")
+                'save_dms': request.form.get("save_dms"),
+                'contributor_id': session.get("account_id")
             }
         )
 
