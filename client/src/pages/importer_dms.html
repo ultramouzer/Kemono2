@@ -2,6 +2,14 @@
 
 {% from 'components/cards.html' import dm_card %}
 
+{% block title %}
+  <title>Approve DMs for import to Kemono.</title>
+{% endblock title %}
+
+{% block meta %}
+  <meta name="account_id" content="{{ props.account_id }}">
+{% endblock meta %}
+
 {% block content %}
 <section 
   class="site-section site-section--importer-dms"

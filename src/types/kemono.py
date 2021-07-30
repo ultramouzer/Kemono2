@@ -10,7 +10,8 @@ class DM:
         published: datetime,
         embed: dict,
         file: dict,
-        import_id: str = None
+        contributor_id: str,
+        import_id: str
     ) -> None:
         self.id = id
         self.user = user
@@ -20,7 +21,8 @@ class DM:
         self.published = published
         self.embed = embed
         self.file = file
-        self.import_id = import_id if import_id else None
+        self.contributor_id = contributor_id
+        self.import_id = import_id 
 
 # class __Post:
 #     id: str

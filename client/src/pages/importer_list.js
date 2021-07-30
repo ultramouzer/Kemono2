@@ -1,16 +1,20 @@
+import { showTooltip, registerMessage } from "@wp/components";
+
 /**
  * @param {HTMLElement} section 
  */
 export function importerPage(section) {
+  const isLoggedIn = localStorage.getItem("logged_in") === "yes";
   /**
    * @type {HTMLFormElement}
    */
-  const form = section.querySelector(".form");
+  const form = document.forms["import-list"];
   const discordSection = form.querySelector("#discord-section");
   const dmConsentSection = form.querySelector("#dm-consent");
 
   form.addEventListener("change", switchDiscordSection(discordSection));
   form.addEventListener("change", switchConsentSection(dmConsentSection));
+  form.addEventListener("submit", handleSubmit(isLoggedIn));
 }
 
 /**
@@ -41,7 +45,7 @@ function switchDiscordSection(discordSection) {
  * @param {HTMLElement} dmConsentSection
  * @returns {(event: Event) => void}
  */
- function switchConsentSection(dmConsentSection) {
+function switchConsentSection(dmConsentSection) {
   return (event) => {
     if (event.target.id === "service") {
       event.stopPropagation();
@@ -60,4 +64,27 @@ function switchDiscordSection(discordSection) {
     }
   }
   
+}
+
+/**
+ * @param {boolean} isLoggedIn
+ * @returns {(event: Event) => void}
+ */
+function handleSubmit(isLoggedIn) {
+  return (event) => {
+    /**
+     * @type {HTMLFormElement}
+     */
+    const form = event.target;
+    /**
+     * @type {HTMLInputElement}
+     */
+    const dmConsent = form.elements["save-dms"];
+
+    if (dmConsent.checked && !isLoggedIn) {
+      event.preventDefault();
+      showTooltip(dmConsent, registerMessage(null));
+      return;
+    }
+  }
 }

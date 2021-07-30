@@ -64,13 +64,19 @@ def importer_status(import_id):
     return response
 
 @importer_page.route('/importer/dms/<import_id>', methods=['GET'])
-def importer_dms(import_id):
+def importer_dms(import_id: str):
+    account_id = session.get('account_id'),
     dms = get_unapproved_dms(import_id)
+    filtered_dms = []
+    for dm in dms:
+        if dm.contributor_id == account_id:
+            filtered_dms.append(dm)
 
     props = DMPageProps(
         current_page= 'import',
         import_id= import_id,
-        dms= dms
+        account_id= account_id,
+        dms= filtered_dms
     )
 
     response = make_response(render_template(
