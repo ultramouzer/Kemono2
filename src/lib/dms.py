@@ -21,8 +21,9 @@ def get_unapproved_dms(import_id: str, reload: bool = False) -> List[kemono_type
     else:
         dms = deserialize_dms(dms)
     
-    for dm in dms:
-        dm = kemono_types.DM(
+
+    for i, dm in enumerate(dms):
+        dms[i] = kemono_types.DM(
             id=dm["id"],
             user=dm["user"],
             service=dm["service"],

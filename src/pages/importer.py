@@ -65,11 +65,11 @@ def importer_status(import_id):
 
 @importer_page.route('/importer/dms/<import_id>', methods=['GET'])
 def importer_dms(import_id: str):
-    account_id = session.get('account_id'),
+    account_id = session.get('account_id')
     dms = get_unapproved_dms(import_id)
     filtered_dms = []
     for dm in dms:
-        if dm.contributor_id == account_id:
+        if dm.contributor_id == str(account_id):
             filtered_dms.append(dm)
 
     props = DMPageProps(
