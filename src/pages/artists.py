@@ -159,6 +159,7 @@ def get_dms(service, artist_id):
         'service': service,
         'session': session,
         'artist': artist,
+        'name': artist['name'],
         'display_data': make_artist_display_data(artist),
         'dms': dms
     }
