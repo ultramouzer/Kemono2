@@ -27,18 +27,18 @@
           --local-colour2-secondary: hsl(3, 70%, 20%);
         }
 
-        &--board {
-          --local-colour1-primary: hsl(224, 27%, 49%);
-          --local-colour1-secondary: hsl(224, 27%, 49%);
-          --local-colour2-primary: hsl(224, 27%, 20%);
-          --local-colour2-secondary: hsl(224, 15%, 20%);
-        }
-
         &--telegram {
           --local-colour1-primary: hsl(200, 100%, 50%);
           --local-colour1-secondary: hsl(200, 70%, 50%);
           --local-colour2-primary: hsl(210, 100%, 20%);
           --local-colour2-secondary: hsl(210, 70%, 20%);
+        }
+
+        &--tpd {
+          --local-colour1-primary: hsl(35, 100%, 50%);
+          --local-colour1-secondary: hsl(35, 100%, 50%);
+          --local-colour2-primary: hsl(35, 100%, 20%);
+          --local-colour2-secondary: hsl(35, 70%, 20%);
         }
       }
     }
