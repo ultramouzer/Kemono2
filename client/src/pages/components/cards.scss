@@ -86,25 +86,20 @@
   }
 
   &__header {
-    padding: 0;
+    transition-property: background-color;
+    &--fav {
+      background-color: var(--favourite-colour2-primary);
 
-    & > * {
-      padding: $size-small;
+      & .post-card__user {
+        display: block;
+      }
     }
   }
   
   &__heading {}
 
   &__user {
-    visibility: hidden;
-    opacity: 0;
-    transition-property: background-color, visibility, opacity;
-
-    &--fav {
-      visibility: visible;
-      opacity: 1;
-      background-color: var(--favourite-colour2-primary);
-    }
+    display: none;
   }
 
   &__name {}
@@ -178,6 +173,7 @@
 
   &__content {
     line-height: 1.5;
+    word-break: break-all;
   }
 
   &__files {}

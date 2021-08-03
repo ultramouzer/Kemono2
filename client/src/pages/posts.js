@@ -18,10 +18,10 @@ export function postsPage(section) {
     };
 
     if (favUser) {
-      const user = card.querySelector(".post-card__user");
-      const userName = card.querySelector(".post-card__name");
+      const header = card.querySelector(".post-card__header");
+      const userName = header.querySelector(".post-card__name");
 
-      user.classList.add("post-card__user--fav");
+      header.classList.add("post-card__header--fav");
       userName.textContent = favUser.name;
     };
 
