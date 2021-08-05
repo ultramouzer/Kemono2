@@ -120,3 +120,24 @@
     </footer>
   </article>
 {% endmacro %}
+
+{% macro account_card(account) %}
+  <article
+    class="account-card"
+    data-id="{{ account.id }}" 
+  >
+    <header class="account-card__header">
+      <h2 class="account-card__name">
+        {{ account.username }}
+      </h2>
+    </header>
+    <section class="account-card__body">
+      <p class="account-card__role">
+        Role: <span>{{ account.role }}</span>
+      </p>
+    </section>
+    <footer class="account-card__footer">
+      {{ timestamp(account.created_at) }}
+    </footer>
+  </article>
+{% endmacro %}

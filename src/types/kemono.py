@@ -1,5 +1,16 @@
 from datetime import datetime
 
+# class Database_Entry:
+#     def __init__(self) -> None:
+#         pass
+#     def read_from_cache():
+#         return
+#     def save_to_cache():
+#         return
+#     def read_from_db():
+#         return
+#     def save_to_db():
+#         return
 class DM:
     def __init__(self, 
         id: str,

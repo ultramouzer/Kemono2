@@ -26,6 +26,8 @@ from src.pages.account import account
 from src.pages.favorites import favorites
 from src.pages.help import help_app
 from src.pages.importer import importer_page
+from src.pages.admin import admin
+from src.pages.moderator import moderator
 
 app = Flask(
     __name__,
@@ -41,9 +43,12 @@ app.register_blueprint(artists)
 app.register_blueprint(random)
 app.register_blueprint(post)
 app.register_blueprint(account)
+app.register_blueprint(admin)
+app.register_blueprint(moderator)
 app.register_blueprint(favorites)
 app.register_blueprint(help_app, url_prefix='/help')
 app.register_blueprint(importer_page)
+
 
 app.config.from_pyfile('flask.cfg')
 app.jinja_env.globals.update(is_logged_in=is_logged_in)

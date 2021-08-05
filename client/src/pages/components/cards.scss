@@ -1,4 +1,5 @@
 @use "../../css/variables" as *;
+@use "../../css/sass-mixins" as mixins;
 
 .post-card {
   position: relative;
@@ -185,4 +186,8 @@
   &__published {}
 
   &__added {}
+}
+
+.account-card {
+  @include mixins.article-card()
 }

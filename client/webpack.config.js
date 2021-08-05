@@ -15,11 +15,14 @@ const pagePlugins = buildHTMLWebpackPlugins(pagesPath, projectPath, pluginOption
 const componentPlugins = buildHTMLWebpackPlugins(componentsPath, projectPath, pluginOptions);
 
 /**
+ * TODO: make separate entries for `admin` and `moderator`
  * @type import("webpack").Configuration
  */
 const webpackConfig = {
   entry: {
-    global: path.join(projectPath, "js", "global.js")
+    global: path.join(projectPath, "js", "global.js"),
+    // admin: path.join(projectPath, "js", "admin.js"),
+    // moderator: path.join(projectPath, "js", "moderator.js"),
   },
   plugins: [
     ...pagePlugins,

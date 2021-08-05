@@ -1,0 +1,63 @@
+{% extends 'components/shell.html' %}
+
+{% from 'components/card_list.html' import card_list %}
+{% from 'components/cards.html' import account_card %}
+
+{% block content %}
+<section class="site-section site-section--admin-accounts">
+  <header class="site-section__header">
+    <h1 class="site-section__heading">
+      Accounts
+    </h1>
+  </header>
+  {# presumably there is going to be a list of accounts #}
+  <form>
+    {% call card_list('legacy') %}
+      {% for account in props.accounts %}
+        <div class="form__section">
+          {{ account_card(account) }}
+          {% if account.role != 'administrator' %}
+            <label for="role-{{ account.id }}">
+              Switch role:
+            </label>
+            <select 
+              id="role-{{ account.id }}"
+              class="form__select"
+              name="{{ account.id }}" 
+              {% if account.role == 'administrator' %}
+                disabled
+              {% endif %}
+            >
+              {% for role in props.role_list %}
+                <option
+                  class="form__option"
+                  value="{{ role }}"
+                  {% if role == account.role %}
+                    selected
+                  {% endif %}
+                >
+                  {{ role }}
+                </option>
+              {% endfor %}
+            </select>
+          {% else %}
+            <p class="account__role">
+              {{ account.role }}
+            </p>
+          {% endif %}
+        </div>
+      {% else %}
+        <p>No accounts found.</p>
+      {% endfor %}
+    {% endcall %}
+    <div class="form__section">
+      <button 
+        class="form__button form__button--submit"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</section>
+{% endblock content %}

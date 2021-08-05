@@ -1,17 +1,23 @@
-# Issues
+# TODOs
 
-## Webpack
+## Server
+- `dataclass()` decorator requires python 3.7
+- `Literal[]` type requires python 3.8
+
+## Client
+### Webpack
 - SASS uses its own module name resolution mechanism which differs from the current webpack setup. Specifically `config.resolve.alias` rules will not apply to filenames in `@use "";` expression.
 - Figure out how to set up source maps for production.
-## HTML/Templates
+- Write a recursive `HTMLWebpackPlugin` builder.
+### HTML/Templates
 
-### `user.html`
+#### `user.html`
 - AJAX search.
 
-### `import` pages
+#### `import` pages
 - consolidate them into a single page, since most of them are jsut placeholder for AJAX scripts.
 
-## CSS
+### CSS
 - Inject env variables into the stylesheet.
 
-## JS
+### JS
