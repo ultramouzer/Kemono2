@@ -2,10 +2,10 @@
 
 ## Setup
 ```sh
-git clone https://github.com/OpenYiff/Kemono2.git kemono-2
+git clone --recurse-submodules https://github.com/OpenYiff/Kemono2.git kemono-2
 cd kemono-2
 cp .env.example .env # open .env and configure
-cp flask.cfg.example flask.cfg # open flask.cfg and configure
+cp flask.cfg.example flask.cfg # open flask.cfg and set 'SECRET_KEY' value
 ```
 ## Docker
 ```sh
