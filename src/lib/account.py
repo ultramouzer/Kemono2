@@ -29,7 +29,7 @@ def load_account(account_id = None, reload = False):
     account = redis.get(key)
     if account is None or reload:
         cursor = get_cursor()
-        query = 'select id, username, created_at from account where id = %s'
+        query = 'select id, username, created_at, role from account where id = %s'
         cursor.execute(query, (account_id,))
         account = cursor.fetchone()
         redis.set(key, serialize_account(account))
@@ -69,6 +69,10 @@ def create_account(username, password, favorites):
         query = "insert into account (username, password_hash) values (%s, %s) returning id"
         cursor.execute(query, (scrub.clean(username), password_hash,))
         account_id = cursor.fetchone()['id']
+        if (account_id == 1):
+            cursor = get_cursor()
+            query = "update account set role = 'administrator' where id = 1"
+            cursor.execute(query)
     finally:
         account_create_lock.release()
 
