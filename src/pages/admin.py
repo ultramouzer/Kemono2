@@ -1,6 +1,7 @@
-from flask import Blueprint, request, make_response, render_template
+from flask import Blueprint, request, make_response, render_template, abort
 from datetime import datetime
 
+from ..lib.account import load_account
 from ..types.account import Account, account_roles
 from .admin_types import admin_props
 
@@ -8,11 +9,9 @@ admin = Blueprint('admin', __name__)
 
 @admin.before_request
 def check_credentials():
-    """
-    Should check for admin creds for the entire blueprint.
-    Return `404` on fail and probably add a log entry.
-    """
-    pass
+    account = load_account()
+    if (not account or account['role'] != 'administrator'):
+        return abort(404)
 
 @admin.route('/admin')
 def get_admin():
