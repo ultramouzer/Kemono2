@@ -66,7 +66,21 @@ def change_accounts():
 
 @admin.route('/admin/accounts/search', methods= ['POST'])
 def search_accounts():
-    pass
+    """
+    Search results for accounts.
+    """
+    accounts = []
+    props = admin_props.Accounts(
+        accounts= accounts,
+        role_list= account_roles
+    )
+
+    response = make_response(render_template(
+        'admin_accounts.html',
+        props = props,
+    ), 200)
+    response.headers['Cache-Control'] = 's-maxage=60'
+    return response
 
 @admin.route('/admin/accounts/<account_id>', methods= ['GET'])
 def get_account(account_id: str):
@@ -103,6 +117,22 @@ def get_account_files(account_id: str):
     )
     response = make_response(render_template(
         'admin_account_files.html',
+        props = props,
+    ), 200)
+    response.headers['Cache-Control'] = 's-maxage=60'
+    return response
+
+@admin.route('/admin/mods/actions', methods= ['GET'])
+def get_moderators_audits():
+    """
+    The list of moderator actions.
+    """
+    actions = []
+    props = admin_props.ModeratorActions(
+        actions= actions
+    )
+    response = make_response(render_template(
+        'admin_mods_actions.html',
         props = props,
     ), 200)
     response.headers['Cache-Control'] = 's-maxage=60'

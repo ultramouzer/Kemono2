@@ -32,12 +32,20 @@ class Account_Files:
         self.account = account
         self.files = files
 
+class ModeratorsActions():
+    def __init__(self, 
+        actions: List[Dict]
+    ) -> None:
+        self.current_page = 'admin'
+        self.actions = actions
+
 class Admin:
     def __init__(self) -> None:
         self.Dashboard = Dashboard
         self.Accounts = Accounts
         self.Account = Account_Props
         self.Account_Files = Account_Files
+        self.ModeratorActions = ModeratorsActions
 
 
 admin_props = Admin()

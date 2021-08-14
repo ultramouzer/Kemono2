@@ -1,4 +1,6 @@
-from flask import Blueprint, request, make_response, render_template
+from flask import Blueprint, request, make_response, render_template, abort
+
+from ..lib.account import load_account
 
 from .moderator_types import mod_props
 
@@ -6,11 +8,9 @@ moderator = Blueprint('mod', __name__)
 
 @moderator.before_request
 def check_credentials():
-    """
-    Should check for mod creds for the entire blueprint.
-    Return `404` on fail and probably add a log entry.
-    """
-    pass
+    account = load_account()
+    if (not account or account['role'] != 'moderator'):
+        return abort(404)
 
 @moderator.route('/mod')
 def get_mod():

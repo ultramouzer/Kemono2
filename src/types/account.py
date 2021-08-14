@@ -39,3 +39,33 @@ class Account:
         self.password = password
         self.created_at = created_at
         self.role = role if role else 'consumer'
+
+class Moderator(Account):
+    def __init__(self, 
+        id: str, 
+        username: str, 
+        password: str, 
+        created_at: datetime,
+    ) -> None:
+        super().__init__(
+            id, 
+            username, 
+            password, 
+            created_at, 
+            role='moderator'
+        )
+
+class Adminstrator(Account):
+    def __init__(self, 
+        id: str, 
+        username: str, 
+        password: str, 
+        created_at: datetime
+    ) -> None:
+        super().__init__(
+            id, 
+            username, 
+            password, 
+            created_at, 
+            role='administrator'
+        )

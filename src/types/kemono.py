@@ -1,16 +1,20 @@
 from datetime import datetime
+from typing import Union
 
-# class Database_Entry:
-#     def __init__(self) -> None:
-#         pass
-#     def read_from_cache():
-#         return
-#     def save_to_cache():
-#         return
-#     def read_from_db():
-#         return
-#     def save_to_db():
-#         return
+class Database_Entry:
+    def __init__(self, 
+        id: str, 
+        created_at: Union[str, datetime]
+    ) -> None:
+        id = id,
+        created_at = created_at
+    
+    def serialize():
+        pass
+
+    def deserialize():
+        pass
+    
 class DM:
     def __init__(self, 
         id: str,
