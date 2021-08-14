@@ -1,6 +1,8 @@
 {% from 'components/timestamp.html' import timestamp %}
 {% from 'components/buttons.html' import button %}
 {% from 'components/links.html' import fancy_link %}
+{% from 'components/fancy_image.html' import fancy_image, background_image %}
+{% from 'components/image_link.html' import image_link %}
 
 {% macro post_card(post) %}
   {% set src = post.file.path if post.file.path and post.file.path|lower|regex_match("\.(gif|jpe?g|jpe|png|webp)$") %}
@@ -63,23 +65,115 @@
   </article>      
 {% endmacro %}
 
-{% macro user_card(user, class_name=none) %}
+{% macro user_card_header(is_count=false, is_date=false) %}
+  <header class="user-card user-card--header">
+    <div class="user-card__icon">Icon</div>
+    <div class="user-card__name">Name</div>
+    <div class="user-card__service">Service</div>
+    {% if is_count %}
+      <div class="user-card__count">Times favorited</div>
+    {% endif %}
+    {% if is_date %}
+      <div class="user-card__updated">Updated</div>
+    {% else %}
+    {% endif %}
+  </header>
+{% endmacro %}
+
+{% macro user_card(
+  user, 
+  is_count=false,
+  is_date=false,
+  class_name=none
+) %}
+  {% set user_link = g.freesites.kemono.user.profile(user.service, user.id) %}
+  {% set user_icon = g.freesites.kemono.user.icon(user.service, user.id) %}
+  <article 
+    class="user-card {{ class_name if class_name }}"
+    data-id="{{ user.id }}"
+    data-service="{{ user.service }}"
+  >
+    <div class="user-card__icon">
+      {{ image_link(
+        url=user_link,
+        src=user_icon,
+        class_name='user-card__user-icon'
+      ) }}
+    </div>
+    <div class="user-card__name">
+      {{ fancy_link(user_link, user.name) }}
+    </div>
+    <div class="user-card__service">
+      {{ g.paysites[user.service].title }}
+    </div>
+    {% if is_date %}
+      <div class="user-card__updated">
+        {{ timestamp(user.updated) }}
+      </div>
+    {% endif %}
+    {% if is_count %}
+      <div class="user-card__count">
+        {{ user.count if user.count else 'None' }}
+      </div>
+    {% endif %}
+  </article>
+{% endmacro %}
+
+{% macro user_card_skeleton() %}
+  <article class="user-card">
+    <div class="user-card__icon">
+    </div>
+    <div class="user-card__name">
+    </div>
+    <div class="user-card__service">
+    </div>
+    <div class="user-card__updated">
+    </div>
+    <div class="user-card__count">
+    </div>
+  </article>
 {% endmacro %}
 
 {% macro dm_card(
   dm,
   is_private=false,
+  is_global=false,
+  artist={},
   class_name=none
 ) %}
   {% set service = g.paysites[dm.service] %}
   {% set artist_link = service.user.profile(dm.user) %}
-  
+  {% set user_link = g.freesites.kemono.user.profile(dm.service, dm.user) %}
+
   <article 
     class="dm-card {{ class_name if class_name }}"
     {% if is_private %}
       data-id="{{ dm.id }}"
     {% endif %}
   >
+    {% if is_global %}
+      {% if artist %}
+        <header class="dm-card__header">
+          {% call fancy_link(url=user_link, class_name="dm-card__icon") %}
+            {{ fancy_image('/icons/' ~ artist.service ~ '/' ~ artist.id) }}
+          {% endcall %}
+
+          {% call fancy_link(url=user_link) %}
+            <span class="dm-card__user">{{ artist.name }}</span>
+          {% endcall %}
+        </header>
+      {% else %}
+        <header class="dm-card__header">
+          {% call fancy_link(
+            url=user_link,
+            class_name='dms__user-link'
+          ) %}
+            <span class="dm-card__user">{{ dm.user }}</span> <span class="dm-card__service">({{ service.title }})</span>
+          {% endcall %}
+        </header>
+      {% endif %}
+    {% endif %}
+
     {% if is_private %}
       <header class="dm-card__header">
         {% call fancy_link(
@@ -91,7 +185,7 @@
       </header>
     {% endif %}
     
-    <section class="dm-card__body">
+    <section class="dm-card__body" tabindex="0">
       <div class="dm-card__content">
         {{ dm.content|safe }}
       </div>

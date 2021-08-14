@@ -1,6 +1,7 @@
 import { kemonoAPI } from "@wp/api";
 import { addFavouritePost, removeFavouritePost, findFavouritePost } from "@wp/js/favorites";
 import { createComponent, LoadingIcon, registerMessage, showTooltip } from "@wp/components";
+import { isLoggedIn } from "@wp/js/account";
 
 const meta = {
   service: null,
@@ -20,9 +21,38 @@ export async function postPage(section) {
   meta.service = document.head.querySelector("[name='service']").content;
   meta.user = document.head.querySelector("[name='user']").content;
   meta.postID = document.head.querySelector("[name='id']").content;
+  const content = section.querySelector(".post__body");
+
   section.addEventListener('click', Expander);
 
+  cleanupBody(content);
   await initButtons(buttonPanel);
+}
+
+/**
+ * @param {HTMLElement} contentElement 
+ */
+function cleanupBody(contentElement) {
+  [...document.links].forEach((link) => {
+
+    if (link.href.startsWith("https://downloads.fanbox.cc")) {
+      link.remove();
+    }
+
+  });
+
+  /**
+   * @type {NodeListOf<HTMLParagraphElement}
+   */
+  const paragraphs = contentElement.querySelectorAll("p:empty");
+  [...paragraphs].forEach((paragraph) => {
+    if (paragraph.nextElementSibling && paragraph.nextElementSibling.tagName === "BR") {
+      paragraph.nextElementSibling.remove();
+      paragraph.remove();
+    } else {
+      paragraph.remove();
+    }
+  });
 }
 
 /**
@@ -37,7 +67,7 @@ async function initButtons(buttonPanel) {
    * @type {HTMLButtonElement}
    */
   const favButton = createComponent("post__fav");
-  const isFavorited = await findFavouritePost(meta.service, meta.user, meta.postID);
+  const isFavorited = isLoggedIn && await findFavouritePost(meta.service, meta.user, meta.postID);
 
   if (isFavorited) {
     const [icon, text] = favButton.children;

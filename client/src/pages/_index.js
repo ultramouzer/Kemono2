@@ -10,6 +10,7 @@ import { importerDMSPage } from "./importer_dms";
 import { postsPage } from "./posts";
 import { artistsPage } from "./artists";
 import { uploadPage } from "./upload";
+import { updatedPage } from "./updated";
 
 /**
  * The map of page names and their callbacks.
@@ -25,6 +26,7 @@ const pages = new Map([
   ["posts", postsPage],
   ["artists", artistsPage],
   ["upload", uploadPage],
+  ["updated", updatedPage],
 ]);
 
 /**

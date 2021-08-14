@@ -1,4 +1,5 @@
 import { CardList, PostCard } from "@wp/components";
+import { isLoggedIn } from "@wp/js/account";
 import { findFavouritePost, findFavouriteArtist } from "@wp/js/favorites";
 
 /**
@@ -10,18 +11,18 @@ export function postsPage(section) {
 
   cardItems.forEach(async (card) => {
     const { postID, userID, service } = PostCard(card);
-    const favPost = await findFavouritePost(service, userID, postID);
-    const favUser = await findFavouriteArtist(userID, service);
+    const favPost = isLoggedIn && await findFavouritePost(service, userID, postID);
+    const favUser = isLoggedIn && await findFavouriteArtist(userID, service);
 
     if (favPost) {
       card.classList.add("post-card--fav");
     };
 
     if (favUser) {
-      const header = card.querySelector(".post-card__header");
-      const userName = header.querySelector(".post-card__name");
+      const user = card.querySelector(".post-card__user");
+      const userName = card.querySelector(".post-card__name");
 
-      header.classList.add("post-card__header--fav");
+      user.classList.add("post-card__user--fav");
       userName.textContent = favUser.name;
     };
 
