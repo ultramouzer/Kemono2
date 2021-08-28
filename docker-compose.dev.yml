@@ -89,6 +89,7 @@ services:
     volumes:
       - ./kitsune.py:/app/config.py
       - data-dev:/storage
+      - ./archiver:/app
     sysctls:
       net.core.somaxconn: 40000
   kemono-redis:
