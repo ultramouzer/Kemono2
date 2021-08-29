@@ -238,7 +238,6 @@ def get_render_data_for_posts(posts):
 
     return (result_previews, result_attachments, result_flagged, result_after_kitsune, result_is_image)
 
-
 def serialize_posts(posts):
     posts = copy.deepcopy(posts)
     return ujson.dumps(list(map(lambda post: prepare_post_fields(post), posts)))
