@@ -1,16 +1,26 @@
+import { isLoggedIn } from "@wp/js/account";
+
 /**
  * Generic request for Kemono API.
- * @param {RequestInfo} endpoint 
- * @param {RequestInit} options 
+ * @param {RequestInfo} endpoint
+ * @param {RequestInit} options
  * @returns {Promise<Response>}
  */
-export async function kemonoFetch(endpoint, options) {
+ export async function kemonoFetch(endpoint, options) {
   try {
     const response = await fetch(endpoint, options);
 
-    // doing this because the server returns `401` before redirecting 
+    // doing this because the server returns `401` before redirecting
     // in case of favs
     if (response.status === 401) {
+      // server logged the account out
+      if (isLoggedIn) {
+        localStorage.removeItem('logged_in');
+        localStorage.removeItem('favs');
+        localStorage.removeItem('post_favs');
+        location.href = '/account/logout';
+        return;
+      }
       const loginURL = new URL("/account/login", location.origin).toString();
       location = addURLParam(loginURL, "redir", location.pathname);
       return;
@@ -23,14 +33,14 @@ export async function kemonoFetch(endpoint, options) {
     return response;
 
   } catch (error) {
-    alert(`Kemono request error: ${error}`);
+    console.error(`Kemono request error: ${error}`);
   }
 }
 
 /**
- * @param {string} url 
- * @param {string} paramName 
- * @param {string} paramValue 
+ * @param {string} url
+ * @param {string} paramName
+ * @param {string} paramValue
  * @returns {string}
  */
 function addURLParam(url, paramName, paramValue) {

@@ -1,6 +1,7 @@
 import { kemonoAPI } from "@wp/api";
 import { addFavouritePost, removeFavouritePost, findFavouritePost } from "@wp/js/favorites";
-import { createComponent, LoadingIcon, registerMessage, showTooltip } from "@wp/components";
+import { LoadingIcon, registerMessage, showTooltip } from "@wp/components";
+import { createComponent } from "@wp/js/component-factory";
 import { isLoggedIn } from "@wp/js/account";
 
 const meta = {
@@ -9,7 +10,7 @@ const meta = {
   postID: null,
 };
 
-/** 
+/**
  * @param {HTMLElement} section
  */
 export async function postPage(section) {
@@ -30,7 +31,7 @@ export async function postPage(section) {
 }
 
 /**
- * @param {HTMLElement} contentElement 
+ * @param {HTMLElement} contentElement
  */
 function cleanupBody(contentElement) {
   [...document.links].forEach((link) => {
@@ -56,7 +57,7 @@ function cleanupBody(contentElement) {
 }
 
 /**
- * @param {HTMLElement} buttonPanel 
+ * @param {HTMLElement} buttonPanel
  */
 async function initButtons(buttonPanel) {
   /**
@@ -78,7 +79,7 @@ async function initButtons(buttonPanel) {
 
   if (!flagButton.classList.contains("post__flag--flagged")) {
     flagButton.addEventListener(
-      "click", 
+      "click",
       handleFlagging(
         meta.service,
         meta.user,
@@ -88,7 +89,7 @@ async function initButtons(buttonPanel) {
   }
 
   favButton.addEventListener(
-    "click", 
+    "click",
     handleFavouriting(
       meta.service,
       meta.user,
@@ -100,9 +101,9 @@ async function initButtons(buttonPanel) {
 }
 
 /**
- * @param {string} service 
- * @param {string} user 
- * @param {string} postID 
+ * @param {string} service
+ * @param {string} user
+ * @param {string} postID
  * @returns {(event: MouseEvent) => Promise<void>}
  */
 function handleFlagging(service, user, postID) {
@@ -113,7 +114,7 @@ function handleFlagging(service, user, postID) {
     const button = event.target;
     const [icon, text] = button.children;
     const loadingIcon = LoadingIcon();
-    const isConfirmed = confirm('Are you sure you want to flag this post for reimport?');
+    const isConfirmed = confirm('Are you sure you want to flag this post for reimport? Only do this if data in the post is broken/corrupted/incomplete.\nThis is not a deletion button.');
 
     button.classList.add("post__flag--loading");
     button.disabled = true;
@@ -132,9 +133,9 @@ function handleFlagging(service, user, postID) {
           button.remove();
         }
       }
-      
+
     } catch (error) {
-      alert(error);
+      console.error(error);
 
     } finally {
       loadingIcon.remove();
@@ -145,9 +146,9 @@ function handleFlagging(service, user, postID) {
 }
 
 /**
- * @param {string} service 
- * @param {string} user 
- * @param {string} postID 
+ * @param {string} service
+ * @param {string} user
+ * @param {string} postID
  * @returns {(event: MouseEvent) => Promise<void>}
  */
 function handleFavouriting(service, user, postID) {
@@ -191,7 +192,7 @@ function handleFavouriting(service, user, postID) {
       }
 
     } catch (error) {
-      alert(error);
+      console.error(error);
 
     } finally {
       loadingIcon.remove();
@@ -213,7 +214,7 @@ function Expand(c, t) {
 };
 
 /**
- * @param {MouseEvent} e 
+ * @param {MouseEvent} e
  */
 function Expander(e) {
   /**

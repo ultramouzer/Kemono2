@@ -1,5 +1,4 @@
 interface KemonoAPI {
-  errors: Map<string, string>,
   favorites: KemonoAPI.Favorites,
   posts: KemonoAPI.Posts
   api: KemonoAPI.API
@@ -20,6 +19,7 @@ namespace KemonoAPI {
     embed: {}
     file: {}
     shared_file: boolean
+    faved_seq?: number
   }
 
   interface User {
@@ -28,6 +28,7 @@ namespace KemonoAPI {
     service: string
     indexed: string
     updated: string
+    faved_seq?: number
   }
   
   interface Favorites {
@@ -41,11 +42,12 @@ namespace KemonoAPI {
 
   namespace Favorites {
     interface User extends KemonoAPI.User {
-      faved_seq: number
     }
 
-    interface Post extends KemonoAPI.Post {
-      faved_seq: number
+    interface Post {
+      id: string
+      service: string
+      user: string
     }
   }
 
@@ -71,5 +73,65 @@ namespace KemonoAPI {
     }
 
     interface LogItem {}
+  }
+}
+
+namespace Component {
+  interface Callback {
+    (props: Props): HTMLElement
+  }
+
+  /**
+   * Init the element off the DOM element.
+   */
+  interface InitFromElement {
+    (props: Props): HTMLElement
+  }
+
+  /**
+   * Create element through component factory.
+   */
+  interface InitFromScratch {
+    (props: Props): HTMLElement
+  }
+
+  interface Props {
+    /**
+     * Element to initiate the component from.
+     */
+    element?: HTMLElement 
+    className?: string
+  }
+
+  namespace GlobalNavigation {
+    namespace Item {
+      interface Callback {
+        (props: Props): HTMLLIElement
+      }
+    
+      interface Props extends Component.Props {
+        element?: HTMLLIElement
+        link: string
+        text?: string
+      }
+
+      interface InitFromScratch {
+        (props: Props): HTMLElement
+      }
+    }
+  }
+}
+
+namespace Events {
+  interface Click {
+    (event: MouseEvent): void
+  }
+
+  interface NavClick {
+    (event: NavClickEvent): void
+  }
+
+  interface NavClickEvent extends MouseEvent {
+    target: HTMLButtonElement
   }
 }
